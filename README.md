@@ -25,7 +25,8 @@ In addition, this project will include:
 
 ## Wireframes
 
-![Homepage](https://user-images.githubusercontent.com/114616864/205213734-aa66f1f6-f5f1-4360-925a-10d72b60cd14.png)
+![Homepage](https://user-images.githubusercontent.com/114616864/205216514-47f3dec9-0d9e-4c45-9acb-928d71b6dc80.png)
+
 
 
 - Nav links include links to this project's Github repo, my LinkedIn and the About modal
