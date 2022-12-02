@@ -27,3 +27,43 @@ In addition, this project will include:
 
 ![Homepage](https://user-images.githubusercontent.com/114616864/205213734-aa66f1f6-f5f1-4360-925a-10d72b60cd14.png)
 
+
+- Nav links include links to this project's Github repo, my LinkedIn and the About modal
+- The left panel will have a short description of the game and instructions
+
+## Technologies, Libraries, APIs
+
+This project will be implemented with the following technologies:
+
+- The `Canvas API` to render the game screen and the mini-games
+- `Webpack` to bundle and transpile the source JavaScript code
+- `npm` to manage project dependencies
+
+## Implementation Timeline
+
+- Friday:
+  - set up project skeleton and classes 
+  - compile list of needed assets overall and per mini-game
+  - source assets
+
+- Saturday:
+  - Render the game screen and be able to switch backgrounds
+  - write the logic for 3 mini-games 
+
+- Sunday: 
+  - Render the remaining game assets 
+  - Work on animation where needed
+
+- Monday: 
+  - Address any bugs
+  - Finish 
+
+- Tuesday: 
+  - Webpage styling and polishing
+
+- Wednesday:
+  - Final tweaks and improvements
+  - Update README 
+
+- Thursday
+  - Deploy to Github pages
