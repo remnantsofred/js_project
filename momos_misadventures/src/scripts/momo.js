@@ -1,8 +1,10 @@
 const CONSTANTS = {
-  GRAVITY: 0.5,
+  GRAVITY: 2,
   JUMP_SPEED: -8,
   GROUND: 400,
   TERMINAL_VEL:  12,
+  LEFTWALL: 0,
+  RIGHTWALL: 550,
   // MOMO_WIDTH:  120,
   // MOMO_HEIGHT:  120
 };
@@ -15,55 +17,92 @@ let frameX = 1;
 let frameY = 0;
 //set a maxFrame variable per row
 let gameFrame = 0;
-const staggerFrames = 15;
+// let staggerFrames = 15;
+//bigger staggerFrame is slower looking move
+//15 should be slow walk (5, 10, 15) 3 speeds
+//max speed staggerFrames = 5
 
 export default class Momo {
 
   constructor(canvasWidth, canvasHeight, ctx) {
-      this.velocity = 0;
+      this.yVelocity = 0;
+      this.xVelocity = 3;
       this.canvasWidth = canvasWidth;
       this.canvasHeight = canvasHeight;
       this.ctx = ctx;
-      this.x = canvasWidth / 3;
-      this.y = canvasHeight / 2;
-      this.move.bind(this);
+      this.x = canvasWidth / 6;
+      this.y = CONSTANTS.GROUND;
+      this.calcXPos.bind(this);
+      this.calcYPos.bind(this);
       this.jump.bind(this);
   }
 
   draw(){
     this.ctx.clearRect(0,0,600, 600);
-    this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
-    this.move();
+    this.calcYPos();
+    if(this.xVelocity > 0)  {
+      this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+      // if (gameFrame % staggerFrames == 0){       //old version
+      if (gameFrame % (this.xVelocity / .5) == 0){
+        // replace staggerFrames with xVelocity/3)
+        if (frameX < 3) frameX ++;
+        else frameX = 1;
+      }
+      
+      gameFrame++
+    } else {
+      this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+    };
     requestAnimationFrame(this.draw.bind(this));
   }
 
 
-  animate(){
-    this.ctx.clearRect(0,0,600, 600);
-    this.move();
-    this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, 50, 450, spriteWidth, spriteHeight);
-      if (gameFrame % staggerFrames == 0){
-        if (frameX < 3) frameX ++;
-        else frameX = 1;
-      }
+  // animate(){
+  //   this.ctx.clearRect(0,0,600, 600);
+  //   this.move();
+  //   this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, 50, 450, spriteWidth, spriteHeight);
+  //     if (gameFrame % staggerFrames == 0){
+  //       if (frameX < 3) frameX ++;
+  //       else frameX = 1;
+  //     }
     
-    gameFrame++;
-    requestAnimationFrame(this.animate.bind(this));
-  }
+  //   gameFrame++;
+  //   requestAnimationFrame(this.animate.bind(this));
+  // }
 
-  move(){
+  calcYPos(){
       if (this.y <= CONSTANTS.GROUND) {
-        this.y += this.velocity
+        this.y += this.yVelocity
+        if (this.y > 400)
+          this.y = 400;
       };
-      console.log('velocity',this.velocity)
-      console.log('y',this.y)
-      if(this.velocity < CONSTANTS.TERMINAL_VEL ){
-          this.velocity += CONSTANTS.GRAVITY;
+      if(this.yVelocity < CONSTANTS.TERMINAL_VEL ){
+          this.yVelocity += CONSTANTS.GRAVITY;
       } 
   }
+  
+  calcXPos(){
+      if (this.x >= CONSTANTS.LEFTWALL) {
+        this.x += this.xVelocity
+        if (this.x < 0)
+          this.x = 0;
+      };
+      if (this.xVelocity < CONSTANTS.TERMINAL_VEL ){
+          this.xVelocity += CONSTANTS.GRAVITY;
+      } 
+      if (this.x <= CONSTANTS.RIGHTWALL){
+        this.x -= this.xVelocity
+        if (this.x > 550)
+          this.x = 550;
+      };
+  }
+
+
 
   jump(){
-      this.velocity = -8;
+      if (this.y === CONSTANTS.GROUND){
+        this.yVelocity = -30;
+      };
       console.log("jump");
   }
 }
