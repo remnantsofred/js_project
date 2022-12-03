@@ -35,7 +35,7 @@ export default class Momo {
     this.x = canvasWidth / 6;
     this.y = CONSTANTS.GROUND;
     this.yVelocity = 0;
-    this.xVelocity = 3;
+    this.xVelocity = 0;
     this.calcXPos.bind(this);
     this.calcYPos.bind(this);
     this.jump.bind(this);
@@ -43,7 +43,7 @@ export default class Momo {
 
   
 
-  draw(){
+  drawMomo(){
     this.ctx.clearRect(0,0,600, 600);
     this.calcYPos();
     if(this.xVelocity > 0)  {
@@ -59,7 +59,7 @@ export default class Momo {
     } else {
       this.ctx.drawImage(momo, 0 * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
     };
-    requestAnimationFrame(this.draw.bind(this));
+    requestAnimationFrame(this.drawMomo.bind(this));
   }
 
 //////// this is old animate code. breaking up to draw and calcYPos and calcXPos
@@ -76,7 +76,8 @@ export default class Momo {
   //   requestAnimationFrame(this.animate.bind(this));
   // }
 
-  calcYPos(){
+  // update Y position (height / vertical pos)
+  calcYPos(yVelocity){
       if (this.y <= CONSTANTS.GROUND) {
         this.y += this.yVelocity
         if (this.y > 400)
@@ -87,7 +88,8 @@ export default class Momo {
       } 
   }
   
-  calcXPos(){
+  // updates X position (horizontal across board)
+  calcXPos(xVelocity){
       if (this.x >= CONSTANTS.LEFTWALL) {
         this.x += this.xVelocity
         if (this.x < 0)
@@ -108,6 +110,5 @@ export default class Momo {
       if (this.y === CONSTANTS.GROUND){
         this.yVelocity = -30;
       };
-      console.log("jump");
   }
 }

@@ -2,8 +2,8 @@
 //// all objects have shared properties:
 //// x & y coordinates, dimensions, if they are moving or not, do they have bounce
 //// collision here? or game?
-//// 
-//// 
+//// static objects: platforms, ground
+//// moving objects: momo, ash, (daphne?), fly
 
 export default class Object {
 
@@ -25,7 +25,13 @@ export default class Object {
 }
 
 
+  //// collide
 
+  
+  //// draw
+
+
+  //// animate
 
 
 

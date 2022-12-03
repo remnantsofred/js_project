@@ -7,7 +7,7 @@ export default class Level {
   }
 
   drawBackground(ctx) {
-    ctx.fillStyle = "purple";
+    ctx.fillStyle = "whitesmoke";
     ctx.fillRect(0, 0, this.dimensions.width, this.dimensions.height);
     console.log(ctx);
   }
