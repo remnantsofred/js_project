@@ -1,13 +1,14 @@
+//// not sure I need this? refactor? 
+//// maybe for each game I change the background here
+
 export default class Level {
   constructor(dimensions) {
     this.dimensions = dimensions;
-    // this.pipes = Array(3).fill().map(() => {
-    //   {x:0, }
-    // });
   }
 
   drawBackground(ctx) {
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "purple";
     ctx.fillRect(0, 0, this.dimensions.width, this.dimensions.height);
+    console.log(ctx);
   }
 }

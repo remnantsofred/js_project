@@ -1,3 +1,8 @@
+//// this should include all the logic related to the main character momo
+//// how to draw and animate momo and source files
+//// momo moves and position
+ 
+
 const CONSTANTS = {
   GRAVITY: 2,
   JUMP_SPEED: -8,
@@ -5,12 +10,11 @@ const CONSTANTS = {
   TERMINAL_VEL:  12,
   LEFTWALL: 0,
   RIGHTWALL: 550,
-  // MOMO_WIDTH:  120,
-  // MOMO_HEIGHT:  120
 };
 
 const momo = new Image();
-momo.src = "./src/assets/cats/momo_walk_reverse_updated.png"
+momo.src = "./src/assets/cats/momo_walk_right.png"
+
 const spriteWidth = 120;
 const spriteHeight = 120;
 let frameX = 1;
@@ -51,12 +55,12 @@ export default class Momo {
       
       gameFrame++
     } else {
-      this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+      this.ctx.drawImage(momo, 0 * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
     };
     requestAnimationFrame(this.draw.bind(this));
   }
 
-
+//////// this is old animate code. breaking up to draw and calcYPos and calcXPos
   // animate(){
   //   this.ctx.clearRect(0,0,600, 600);
   //   this.move();
@@ -96,7 +100,6 @@ export default class Momo {
           this.x = 550;
       };
   }
-
 
 
   jump(){
