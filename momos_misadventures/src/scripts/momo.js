@@ -1,7 +1,7 @@
 //// this should include all the logic related to the main character momo
 //// how to draw and animate momo and source files
 //// momo moves and position
- 
+import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
@@ -28,18 +28,20 @@ let gameFrame = 0;
 
 export default class Momo {
 
-  constructor(canvasWidth, canvasHeight, ctx) {
-      this.yVelocity = 0;
-      this.xVelocity = 3;
-      this.canvasWidth = canvasWidth;
-      this.canvasHeight = canvasHeight;
-      this.ctx = ctx;
-      this.x = canvasWidth / 6;
-      this.y = CONSTANTS.GROUND;
-      this.calcXPos.bind(this);
-      this.calcYPos.bind(this);
-      this.jump.bind(this);
+  constructor(canvasWidth, canvasHeight, ctx, bounce) {
+    this.canvasWidth = canvasWidth;
+    this.canvasHeight = canvasHeight;
+    this.ctx = ctx;
+    this.x = canvasWidth / 6;
+    this.y = CONSTANTS.GROUND;
+    this.yVelocity = 0;
+    this.xVelocity = 3;
+    this.calcXPos.bind(this);
+    this.calcYPos.bind(this);
+    this.jump.bind(this);
   }
+
+  
 
   draw(){
     this.ctx.clearRect(0,0,600, 600);

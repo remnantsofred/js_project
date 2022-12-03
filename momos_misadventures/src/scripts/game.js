@@ -15,7 +15,7 @@ export default class MomoMisadventure {
     this.restart();
   }
 
-  
+  //// starts fresh gamestate? what does this do 
   restart() {
     this.running = false;
     this.level = new Level(this.dimensions);
@@ -56,7 +56,11 @@ export default class MomoMisadventure {
     this.momo.jump();
   }
 
-  ////
+  //// win?
+
+  //// lose?
+
+  //// next game
 
 
 }
