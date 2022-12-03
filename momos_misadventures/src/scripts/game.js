@@ -5,12 +5,11 @@ export default class MomoMisadventure {
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
     this.dimensions = { width: canvas.width, height: canvas.height };
+    this.canvas = canvas;
     this.restart();
   }
 
   animate() {
-    console.log(this);
-    
     this.level.drawBackground(this.ctx);
     this.momo.animate();
     if (this.running){
@@ -23,11 +22,18 @@ export default class MomoMisadventure {
     this.level = new Level(this.dimensions);
     this.momo = new Momo(this.dimensions.width, this.dimensions.height, this.ctx);
     // this.animate();
+    
   }
-
+  
   play(){
     this.running = true;
-    this.animate();
+    this.momo.draw();
+    // this.animate();
+    // add event listener here for mouseclick => jump
+    this.canvas.addEventListener("click", ()=>{
+      this.momo.jump();
+    });
+
   }
 
   click(){

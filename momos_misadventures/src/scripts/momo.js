@@ -1,9 +1,10 @@
 const CONSTANTS = {
-  GRAVITY: 0,
+  GRAVITY: 0.5,
   JUMP_SPEED: -8,
+  GROUND: 400,
   TERMINAL_VEL:  12,
-  MOMO_WIDTH:  120,
-  MOMO_HEIGHT:  120
+  // MOMO_WIDTH:  120,
+  // MOMO_HEIGHT:  120
 };
 
 const momo = new Image();
@@ -25,53 +26,44 @@ export default class Momo {
       this.ctx = ctx;
       this.x = canvasWidth / 3;
       this.y = canvasHeight / 2;
+      this.move.bind(this);
+      this.jump.bind(this);
   }
 
-//   drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-    // animate(){
-    //   ctx.clearRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT);
-    //   this.ctx.fillStyle = "#2B65EC";
-    //   this.ctx.fillRect(0,0,600,600);
-    //   this.ctx.drawImage(momo, 100,100);
-    //   this.drawMomo();
-    //     // this.animate();
-    //     if (gameFrame % staggerFrames == 0){
-    //       if (frameX < 3) frameX ++;
-    //       else frameX = 1;
-    //     }
-      
-    //   gameFrame++;
-    //   requestAnimationFrame(animate);
-    // }
-
-
-  drawMomo(){
-    // ctx.clearRect(0,0, this.canvasWidth, this.canvasHeight)
-      this.ctx.clearRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT);
-      this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, 50, 450, spriteWidth, spriteHeight);
+  draw(){
+    this.ctx.clearRect(0,0,600, 600);
+    this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+    this.move();
+    requestAnimationFrame(this.draw.bind(this));
   }
+
 
   animate(){
-      this.move();
-      this.drawMomo(this.ctx);
+    this.ctx.clearRect(0,0,600, 600);
+    this.move();
+    this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, 50, 450, spriteWidth, spriteHeight);
       if (gameFrame % staggerFrames == 0){
         if (frameX < 3) frameX ++;
         else frameX = 1;
       }
     
     gameFrame++;
-    requestAnimationFrame(animate);
-
+    requestAnimationFrame(this.animate.bind(this));
   }
 
   move(){
-      this.y += this.velocity;
+      if (this.y <= CONSTANTS.GROUND) {
+        this.y += this.velocity
+      };
+      console.log('velocity',this.velocity)
+      console.log('y',this.y)
       if(this.velocity < CONSTANTS.TERMINAL_VEL ){
           this.velocity += CONSTANTS.GRAVITY;
-      }
+      } 
   }
 
   jump(){
       this.velocity = -8;
+      console.log("jump");
   }
 }
