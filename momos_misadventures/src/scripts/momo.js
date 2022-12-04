@@ -65,7 +65,7 @@ export default class Momo {
     this.ctx.clearRect(0,0,800,800);
     this.calcYPos();
     this.calcXPos();
-    if(this.xVelocity > 0 && this.direction === "right")  {
+    if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
       this.ctx.drawImage(momo, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
@@ -75,7 +75,7 @@ export default class Momo {
       }
       
       gameFrame++
-    } else if (this.xVelocity > 0 && this.direction === "left"){
+    } else if (this.jumped === false && this.xVelocity < 0 && this.direction === "left"){
       this.ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
@@ -86,19 +86,40 @@ export default class Momo {
        
       gameFrame++
     } else if (this.jumped === true && this.direction === "right"){
-      this.ctx.drawImage(momoJumpRight, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
-      if (gameFrame % 4 == 0){
-        // replace staggerFrames with xVelocity/3)
-        if (frameX < 3) frameX ++;
-        else frameX = 0;
-      }
+      this.ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
+      if (this.yVelocity < -25 && this.yVelocity > -30){
+        frameX = 0;
+      } else if (this.yVelocity < -20 && this.yVelocity > -25) {
+        frameX = 1;
+      } else if (this.yVelocity < -15 && this.yVelocity > -20) {
+        frameX = 2;
+        //// frame 3 is the nice outstretched jump momo. most jump-like
+      } else if (this.yVelocity < -3 && this.yVelocity > -15){
+        frameX = 3;
+        //// Frame 4 should be the top of the jump
+      } else if (this.yVelocity < 3 && this.yVelocity > -3) {
+        frameX = 4;
+      } else if (this.yVelocity < -3 && this.yVelocity > 15) {
+        frameX = 5;
+      } else if (this.yVelocity < 15 && this.yVelocity > 20) {
+        frameX = 6;
+      } else if (this.yVelocity < 20 && this.yVelocity > 25){
+        frameX = 7;
+      } else if (this.yVelocity < 25 && this.yVelocity > 30) {
+        frameX = 8;
+      } 
+      
     } else if (this.jumped === true && this.direction === "left"){
       this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
-      if (gameFrame % 4 == 0){
-        // replace staggerFrames with xVelocity/3)
-        if (frameX < 3) frameX ++;
-        else frameX = 0;
+      if (this.yVelocity < -3 && this.yVelocity > -30){
+        frameX = 0;
+      } else if (this.yVelocity < 3 && this.yVelocity > -3) {
+        frameX = 2;
+
+      } else {
+        frameX = 3;
       }
+     
     } else {
       this.ctx.drawImage(momo, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
     };
@@ -127,8 +148,10 @@ export default class Momo {
         /// momo falls down
         this.y += this.yVelocity
         // if momo tries to go lower than floor, stop her at floor
-        if (this.y > CONSTANTS.GROUND)
+        if (this.y > CONSTANTS.GROUND){
           this.y = CONSTANTS.GROUND;
+          this.jumped = false;
+        }
       };
       // as long as momo isn't falling beyond fast rate (12), add gravity (which is positive, so go down)
       if(this.yVelocity < CONSTANTS.TERMINAL_VEL){
@@ -143,29 +166,33 @@ export default class Momo {
   //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
   //// friction here is a positive number (2)
   calcXPos(){
-    if (this.xVelocity > 0 && this.direction === "left"){
-      this.x -= this.xVelocity;
+    if (this.xVelocity !== 0){
+      this.x += this.xVelocity;
       if (this.yVelocity === 0) {
-        this.xVelocity -= CONSTANTS.FRICTION;
+        if (this.xVelocity > 0){
+          this.xVelocity -= CONSTANTS.FRICTION;
+        } else {
+          this.xVelocity += CONSTANTS.FRICTION;
+        }
       }
       // so momo can't walk past canvas wall
       if (this.x <= 0){
         this.x = 0;
         this.xVelocity = 0;
       }
-    } 
-    
-    if (this.xVelocity > 0 && this.direction === "right"){
-      this.x += this.xVelocity;
-      if (this.yVelocity === 0 ){
-        this.xVelocity -= CONSTANTS.FRICTION;
-      }
-      // so momo can't walk past canvas wall
       if (this.x >= (CONSTANTS.RIGHTWALL - walkspriteWidth)){
         this.x = (CONSTANTS.RIGHTWALL - walkspriteWidth);
         this.xVelocity = 0;
       }
     } 
+    
+    // if (this.xVelocity > 0 && this.direction === "right"){
+    //   this.x += this.xVelocity;
+    //   if (this.yVelocity === 0 ){
+    //     this.xVelocity -= CONSTANTS.FRICTION;
+    //   }
+    //   // so momo can't walk past canvas wall
+    // } 
 
     
   }
@@ -184,9 +211,9 @@ export default class Momo {
   moveLeft(speed){
     this.direction = "left";
     if (speed === "walk"){
-    this.xVelocity = CONSTANTS.WALK_SPEED;
+    this.xVelocity = -CONSTANTS.WALK_SPEED;
     } else if (speed === "run"){
-      this.xVelocity = CONSTANTS.RUN_SPEED;
+      this.xVelocity = -CONSTANTS.RUN_SPEED;
     }
   }
   
