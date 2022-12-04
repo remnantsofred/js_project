@@ -88,27 +88,13 @@ export default class Momo {
       gameFrame++
     } else if (this.jumped === true && this.direction === "right"){
       this.ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
-      if (this.yVelocity < -25 && this.yVelocity > -30){
-        frameX = 0;
-      } else if (this.yVelocity < -20 && this.yVelocity > -25) {
-        frameX = 1;
-      } else if (this.yVelocity < -15 && this.yVelocity > -20) {
+      if (this.yVelocity < -3 && this.yVelocity > -30){
         frameX = 2;
-        //// frame 3 is the nice outstretched jump momo. most jump-like
-      } else if (this.yVelocity < -3 && this.yVelocity > -15){
-        frameX = 3;
-        //// Frame 4 should be the top of the jump
-      } else if (this.yVelocity < 3 && this.yVelocity > -3) {
+      } else if (this.yVelocity < 3 && this.yVelocity >= -3) {
         frameX = 4;
-      } else if (this.yVelocity < -3 && this.yVelocity > 15) {
+      } else {
         frameX = 5;
-      } else if (this.yVelocity < 15 && this.yVelocity > 20) {
-        frameX = 6;
-      } else if (this.yVelocity < 20 && this.yVelocity > 25){
-        frameX = 7;
-      } else if (this.yVelocity < 25 && this.yVelocity > 30) {
-        frameX = 8;
-      } 
+      }
       
     } else if (this.jumped === true && this.direction === "left"){
       this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
