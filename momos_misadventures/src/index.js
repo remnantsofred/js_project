@@ -7,7 +7,7 @@ const canvas = document.getElementById("gamescreen");
 const ctx = canvas.getContext("2d");
 
 const CANVAS_WIDTH = canvas.width = 800;
-const CANVAS_HEIGHT = canvas.height = 800;
+const CANVAS_HEIGHT = canvas.height = 600;
 
 /////////////////////////////////////////////////////////////
 //// this part of the code is me learning. will remove later
@@ -24,8 +24,7 @@ const CANVAS_HEIGHT = canvas.height = 800;
 let game = new Game(canvas);
 
 console.log("Webpack is working!")
-console.log(game.momo.xVelocity);
-console.log(game.momo.yVelocity);
+
 
 
 

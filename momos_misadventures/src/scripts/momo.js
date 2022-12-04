@@ -5,11 +5,11 @@ import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
-  FRICTION: 2,
+  FRICTION: 0.1,
   JUMP_SPEED: -30,
-  GROUND: 625,
+  GROUND: 425,
   TERMINAL_VEL:  12,
-  WALK_SPEED: 5,
+  WALK_SPEED: 7,
   RUN_SPEED: 12,
   MAX_MOMO_SPEED: 20,
   LEFTWALL: 0,
@@ -17,6 +17,7 @@ const CONSTANTS = {
 };
 
 const momo = new Image();
+momo.width = 10;
 momo.src = "./src/assets/cats/momo_walk_right.png"
 const momoLeft = new Image();
 momoLeft.src = "./src/assets/cats/momo_walk_left.png"
@@ -33,7 +34,7 @@ const jumpspriteWidth = 133;
 const jumpspriteHeight = 156;
 // const momo = new Image();
 // momo.src = "./src/assets/cats/momo_walk_right.png"
-
+let sizeModifier = 0.75;
 let frameX = 1;
 let frameY = 0;
 //set a maxFrame variable per row
@@ -66,7 +67,7 @@ export default class Momo {
     this.calcYPos();
     this.calcXPos();
     if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
-      this.ctx.drawImage(momo, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
+      this.ctx.drawImage(momo, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
@@ -76,7 +77,7 @@ export default class Momo {
       
       gameFrame++
     } else if (this.jumped === false && this.xVelocity < 0 && this.direction === "left"){
-      this.ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
+      this.ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
@@ -86,7 +87,7 @@ export default class Momo {
        
       gameFrame++
     } else if (this.jumped === true && this.direction === "right"){
-      this.ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
+      this.ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
       if (this.yVelocity < -25 && this.yVelocity > -30){
         frameX = 0;
       } else if (this.yVelocity < -20 && this.yVelocity > -25) {
@@ -110,7 +111,7 @@ export default class Momo {
       } 
       
     } else if (this.jumped === true && this.direction === "left"){
-      this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
+      this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
       if (this.yVelocity < -3 && this.yVelocity > -30){
         frameX = 0;
       } else if (this.yVelocity < 3 && this.yVelocity > -3) {
@@ -121,7 +122,7 @@ export default class Momo {
       }
      
     } else {
-      this.ctx.drawImage(momo, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
+      this.ctx.drawImage(momo, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
     };
     requestAnimationFrame(this.drawMomo.bind(this));
   }
@@ -166,13 +167,21 @@ export default class Momo {
   //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
   //// friction here is a positive number (2)
   calcXPos(){
+    console.log(this.xVelocity);
+    console.log(this.yVelocity);
     if (this.xVelocity !== 0){
       this.x += this.xVelocity;
-      if (this.yVelocity === 0) {
+      if (this.yVelocity === 12) {
         if (this.xVelocity > 0){
           this.xVelocity -= CONSTANTS.FRICTION;
+          if(this.xVelocity < 0){
+            this.xVelocity = 0;
+          }
         } else {
           this.xVelocity += CONSTANTS.FRICTION;
+          if(this.xVelocity > 0){
+            this.xVelocity = 0;
+          }
         }
       }
       // so momo can't walk past canvas wall
@@ -180,8 +189,8 @@ export default class Momo {
         this.x = 0;
         this.xVelocity = 0;
       }
-      if (this.x >= (CONSTANTS.RIGHTWALL - walkspriteWidth)){
-        this.x = (CONSTANTS.RIGHTWALL - walkspriteWidth);
+      if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+        this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
         this.xVelocity = 0;
       }
     } 
