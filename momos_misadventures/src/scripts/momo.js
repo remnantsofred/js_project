@@ -18,6 +18,12 @@ const CONSTANTS = {
 
 const momo = new Image();
 momo.src = "./src/assets/cats/momo_walk_right.png"
+const momoLeft = new Image();
+momoLeft.src = "./src/assets/cats/momo_walk_left.png"
+const momoJump = new Image();
+momoJump.src = "./src/assets/cats/momo_walk_right.png"
+// const momo = new Image();
+// momo.src = "./src/assets/cats/momo_walk_right.png"
 
 const spriteWidth = 120;
 const spriteHeight = 114;
@@ -25,7 +31,7 @@ let frameX = 1;
 let frameY = 0;
 //set a maxFrame variable per row
 let gameFrame = 0;
-// let staggerFrames = 15;
+let staggerFrames = 10;
 //bigger staggerFrame is slower looking move
 //15 should be slow walk (5, 10, 15) 3 speeds
 //max speed staggerFrames = 5
@@ -46,16 +52,25 @@ export default class Momo {
     this.direction = null;
   }
 
-  
 
   drawMomo(){
     this.ctx.clearRect(0,0,800,800);
     this.calcYPos();
     this.calcXPos();
-    if(this.xVelocity > 0)  {
+    if(this.xVelocity > 0 && this.direction === "right")  {
       this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % (this.xVelocity / 1.25) == 0){
+        // replace staggerFrames with xVelocity/3)
+        if (frameX < 3) frameX ++;
+        else frameX = 1;
+      }
+      
+      gameFrame++
+    } else if (this.xVelocity > 0 && this.direction === "left"){
+      this.ctx.drawImage(momoLeft, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+      // if (gameFrame % staggerFrames == 0){       //old version
+      if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
         if (frameX < 3) frameX ++;
         else frameX = 1;
