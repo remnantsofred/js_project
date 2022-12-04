@@ -28,9 +28,9 @@ const walkspriteHeight = 114;
 const momoJumpRight = new Image();
 momoJumpRight.src = "./src/assets/cats/momo_pounce_right.png"
 const momoJumpLeft = new Image();
-momoJumpLeft.src = "./src/assets/cats/momo_pounce_left.png"
-const jumpspriteWidth = 165;
-const jumpspriteHeight = 150;
+momoJumpLeft.src = "./src/assets/cats/momo_pounce_left_shortv1.png"
+const jumpspriteWidth = 133;
+const jumpspriteHeight = 156;
 // const momo = new Image();
 // momo.src = "./src/assets/cats/momo_walk_right.png"
 
@@ -89,14 +89,14 @@ export default class Momo {
       this.ctx.drawImage(momoJumpRight, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
       if (gameFrame % 4 == 0){
         // replace staggerFrames with xVelocity/3)
-        if (frameX < 8) frameX ++;
+        if (frameX < 3) frameX ++;
         else frameX = 0;
       }
     } else if (this.jumped === true && this.direction === "left"){
       this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
       if (gameFrame % 4 == 0){
         // replace staggerFrames with xVelocity/3)
-        if (frameX < 8) frameX ++;
+        if (frameX < 3) frameX ++;
         else frameX = 0;
       }
     } else {
