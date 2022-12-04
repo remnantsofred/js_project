@@ -5,7 +5,7 @@ import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
-  FRICTION: 1.5,
+  FRICTION: 2,
   JUMP_SPEED: -30,
   GROUND: 625,
   TERMINAL_VEL:  12,
@@ -20,13 +20,20 @@ const momo = new Image();
 momo.src = "./src/assets/cats/momo_walk_right.png"
 const momoLeft = new Image();
 momoLeft.src = "./src/assets/cats/momo_walk_left.png"
-const momoJump = new Image();
-momoJump.src = "./src/assets/cats/momo_walk_right.png"
+const walkspriteWidth = 120;
+const walkspriteHeight = 114;
+
+
+
+const momoJumpRight = new Image();
+momoJumpRight.src = "./src/assets/cats/momo_pounce_right.png"
+const momoJumpLeft = new Image();
+momoJumpLeft.src = "./src/assets/cats/momo_pounce_left.png"
+const jumpspriteWidth = 165;
+const jumpspriteHeight = 150;
 // const momo = new Image();
 // momo.src = "./src/assets/cats/momo_walk_right.png"
 
-const spriteWidth = 120;
-const spriteHeight = 114;
 let frameX = 1;
 let frameY = 0;
 //set a maxFrame variable per row
@@ -50,6 +57,7 @@ export default class Momo {
     this.calcYPos.bind(this);
     this.jump.bind(this);
     this.direction = null;
+    this.jumped = false;
   }
 
 
@@ -58,7 +66,7 @@ export default class Momo {
     this.calcYPos();
     this.calcXPos();
     if(this.xVelocity > 0 && this.direction === "right")  {
-      this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+      this.ctx.drawImage(momo, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
@@ -68,17 +76,31 @@ export default class Momo {
       
       gameFrame++
     } else if (this.xVelocity > 0 && this.direction === "left"){
-      this.ctx.drawImage(momoLeft, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+      this.ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
         if (frameX < 3) frameX ++;
         else frameX = 1;
       }
-      
+       
       gameFrame++
+    } else if (this.jumped === true && this.direction === "right"){
+      this.ctx.drawImage(momoJumpRight, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
+      if (gameFrame % 4 == 0){
+        // replace staggerFrames with xVelocity/3)
+        if (frameX < 8) frameX ++;
+        else frameX = 0;
+      }
+    } else if (this.jumped === true && this.direction === "left"){
+      this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth, jumpspriteHeight);
+      if (gameFrame % 4 == 0){
+        // replace staggerFrames with xVelocity/3)
+        if (frameX < 8) frameX ++;
+        else frameX = 0;
+      }
     } else {
-      this.ctx.drawImage(momo, 0 * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
+      this.ctx.drawImage(momo, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth, walkspriteHeight);
     };
     requestAnimationFrame(this.drawMomo.bind(this));
   }
@@ -139,8 +161,8 @@ export default class Momo {
         this.xVelocity -= CONSTANTS.FRICTION;
       }
       // so momo can't walk past canvas wall
-      if (this.x >= (CONSTANTS.RIGHTWALL - spriteWidth)){
-        this.x = (CONSTANTS.RIGHTWALL - spriteWidth);
+      if (this.x >= (CONSTANTS.RIGHTWALL - walkspriteWidth)){
+        this.x = (CONSTANTS.RIGHTWALL - walkspriteWidth);
         this.xVelocity = 0;
       }
     } 
@@ -153,6 +175,7 @@ export default class Momo {
       // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
     // this.direction = "up";
     if (this.y === CONSTANTS.GROUND){
+      this.jumped = true;
       this.yVelocity = CONSTANTS.JUMP_SPEED;
     };
 
