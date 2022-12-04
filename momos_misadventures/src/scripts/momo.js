@@ -114,8 +114,20 @@ export default class Momo {
       if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
         this.xVelocity -= CONSTANTS.FRICTION;
       }
+      if (this.x <= 0){
+        this.x = 0;
+      }
     } 
-
+    
+    if (this.xVelocity > 0 && this.direction === "right"){
+      this.x += this.xVelocity;
+      if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
+        this.xVelocity -= CONSTANTS.FRICTION;
+      }
+      if (this.x >= 480){
+        this.x = 480;
+      }
+    } 
 
     // if (this.x >= CONSTANTS.LEFTWALL) {
         
