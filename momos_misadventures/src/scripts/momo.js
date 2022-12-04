@@ -7,20 +7,20 @@ const CONSTANTS = {
   GRAVITY: 2,
   FRICTION: 0.5,
   JUMP_SPEED: -30,
-  GROUND: 400,
+  GROUND: 625,
   TERMINAL_VEL:  12,
   WALK_SPEED: 10,
   RUN_SPEED: 15,
   MAX_MOMO_SPEED: 20,
   LEFTWALL: 0,
-  RIGHTWALL: 550,
+  RIGHTWALL: 800,
 };
 
 const momo = new Image();
 momo.src = "./src/assets/cats/momo_walk_right.png"
 
 const spriteWidth = 120;
-const spriteHeight = 120;
+const spriteHeight = 114;
 let frameX = 1;
 let frameY = 0;
 //set a maxFrame variable per row
@@ -36,7 +36,7 @@ export default class Momo {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.ctx = ctx;
-    this.x = canvasWidth / 6;
+    this.x = canvasWidth / 8;
     this.y = CONSTANTS.GROUND;
     this.yVelocity = 0;
     this.xVelocity = 0;
@@ -49,13 +49,13 @@ export default class Momo {
   
 
   drawMomo(){
-    this.ctx.clearRect(0,0,600, 600);
+    this.ctx.clearRect(0,0,800,800);
     this.calcYPos();
     this.calcXPos();
     if(this.xVelocity > 0)  {
       this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
-      if (gameFrame % (this.xVelocity / 2) == 0){
+      if (gameFrame % (this.xVelocity / 1.25) == 0){
         // replace staggerFrames with xVelocity/3)
         if (frameX < 3) frameX ++;
         else frameX = 1;
@@ -90,8 +90,8 @@ export default class Momo {
         /// momo falls down
         this.y += this.yVelocity
         // if momo tries to go lower than floor, stop her at floor
-        if (this.y > 400)
-          this.y = 400;
+        if (this.y > CONSTANTS.GROUND)
+          this.y = CONSTANTS.GROUND;
       };
       // as long as momo isn't falling beyond fast rate (12), add gravity (which is positive, so go down)
       if(this.yVelocity < CONSTANTS.TERMINAL_VEL){
@@ -123,8 +123,8 @@ export default class Momo {
       if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
         this.xVelocity -= CONSTANTS.FRICTION;
       }
-      if (this.x >= 482){
-        this.x = 482;
+      if (this.x >= (CONSTANTS.RIGHTWALL - spriteWidth)){
+        this.x = (CONSTANTS.RIGHTWALL - spriteWidth);
       }
     } 
 

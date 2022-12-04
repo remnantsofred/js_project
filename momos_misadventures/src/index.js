@@ -6,8 +6,8 @@ import Momo from './scripts/momo';
 const canvas = document.getElementById("gamescreen");
 const ctx = canvas.getContext("2d");
 
-const CANVAS_WIDTH = canvas.width = 600;
-const CANVAS_HEIGHT = canvas.height = 600;
+const CANVAS_WIDTH = canvas.width = 800;
+const CANVAS_HEIGHT = canvas.height = 800;
 
 /////////////////////////////////////////////////////////////
 //// this part of the code is me learning. will remove later
