@@ -41,7 +41,11 @@ export default class Game {
   keydownEvents(e){
     if (e.key === "ArrowLeft") {
       this.momo.direction = "left";
-      this.momo.moveLeft();
+      if (e.repeat){
+        this.momo.moveLeft("run");
+      } else if (!e.repeat){
+        this.momo.moveLeft("walk");
+      }
     } else if (e.key === "ArrowUp") {
       this.momo.direction = "up";
       this.momo.jump();
@@ -54,7 +58,11 @@ export default class Game {
     } else if (e.key === "ArrowRight"){
       // this.momo.calcXPos(5);
       this.momo.direction = "right";
-      this.momo.moveRight();
+      if (e.repeat){
+        this.momo.moveRight("run");
+      } else if (!e.repeat){
+        this.momo.moveRight("walk");
+      }
     } // else if (e.key === )
     // else if (e.key === ' ' || e.key === "Spacebar"){
     // };

@@ -5,12 +5,11 @@ import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
-  FRICTION: 2,
+  FRICTION: 0.5,
   JUMP_SPEED: -30,
   GROUND: 400,
   TERMINAL_VEL:  12,
-  WALK_SPEED: 5,
-  JOG_SPEED: 10,
+  WALK_SPEED: 10,
   RUN_SPEED: 15,
   MAX_MOMO_SPEED: 20,
   LEFTWALL: 0,
@@ -56,7 +55,7 @@ export default class Momo {
     if(this.xVelocity > 0)  {
       this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
-      if (gameFrame % (this.xVelocity / .5) == 0){
+      if (gameFrame % (this.xVelocity / 2) == 0){
         // replace staggerFrames with xVelocity/3)
         if (frameX < 3) frameX ++;
         else frameX = 1;
@@ -86,6 +85,7 @@ export default class Momo {
   // update Y position (height / vertical pos)
   calcYPos(){
       /// if momo is currently higher than ground,
+      // this.calcXPos();
       if (this.y <= CONSTANTS.GROUND) {
         /// momo falls down
         this.y += this.yVelocity
@@ -94,7 +94,7 @@ export default class Momo {
           this.y = 400;
       };
       // as long as momo isn't falling beyond fast rate (12), add gravity (which is positive, so go down)
-      if(this.yVelocity < CONSTANTS.TERMINAL_VEL ){
+      if(this.yVelocity < CONSTANTS.TERMINAL_VEL){
           this.yVelocity += CONSTANTS.GRAVITY;
       } 
   }
@@ -107,7 +107,6 @@ export default class Momo {
     //// make sure you dont go beyond walls
     //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
     //// friction here is a positive number (2)
-    console.log("start x", this.x)
 
     if (this.xVelocity > 0 && this.direction === "left"){
       this.x -= this.xVelocity;
@@ -124,26 +123,11 @@ export default class Momo {
       if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
         this.xVelocity -= CONSTANTS.FRICTION;
       }
-      if (this.x >= 480){
-        this.x = 480;
+      if (this.x >= 482){
+        this.x = 482;
       }
     } 
 
-    // if (this.x >= CONSTANTS.LEFTWALL) {
-        
-    //     this.x += this.xVelocity
-    //     if (this.x < 0)
-    //       this.x = 0;
-
-    //   };
-    //   if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED && this.xVelocity > 0){
-    //       this.xVelocity += CONSTANTS.FRICTION;
-    //   } 
-    //   if (this.x <= CONSTANTS.RIGHTWALL){
-    //     this.x -= this.xVelocity
-    //     if (this.x > 550)
-    //       this.x = 550;
-    //   };
   }
 
 
@@ -154,11 +138,15 @@ export default class Momo {
     };
   }
   
-  moveLeft(){
+  moveLeft(speed){
+    if (speed === "walk"){
     this.xVelocity = CONSTANTS.WALK_SPEED;
+    } else if (speed === "run"){
+      this.xVelocity = CONSTANTS.RUN_SPEED;
+    }
   }
   
-  moveRight(){
+  moveRight(speed){
     this.xVelocity = CONSTANTS.WALK_SPEED;
     
   }
