@@ -8,56 +8,63 @@ import Level from './level'
 //// logic to start a minigame and continue to next one if win (and update score)
 //// go back to main screen on loss 
 export default class Game {
-  constructor(canvas) {
+  constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
     this.dimensions = { width: canvas.width, height: canvas.height };
     this.canvas = canvas;
-    this.restart();
-  }
-
-  //// starts fresh gamestate? what does this do 
-  //// sets running to false, creates a new level (which is supposed to fill the background)
-  //// creates a new momo 
-  //// probably need to add: reset score
-  restart() {
-    this.running = false;
-    this.level = new Level(this.dimensions);
     this.momo = new Momo(this.dimensions.width, this.dimensions.height, this.ctx);
+    this.level = new Level(this.dimensions);
     this.play();
+    this.score = 0;
   }
+  
+
   
   play(){
     // this.running = true;
     this.momo.drawMomo();
+    this.addEventListeners();
     // TO ADD: cycle thru all objects & draw each
-
-    this.canvas.addEventListener("keydown", (e)=>{
-      //left key === 37
-      if (e.keyCode == '37') {
-        // this.momo.calcXPos(-5);
-        this.momo.jump();
-        console.log("jump - left arrow")
-      //up key === 38
-      } else if (e.keyCode == '38') {
-        this.momo.jump.bind(this);
-      
-      //down key === 40 (fall through platform if not on ground)
-      } else if (e.keyCode == '40') {
-        this.momo.jump();
-      
-        //right key ==- 39
-      } else if (e.keyCode == '39'){
-        // this.momo.calcXPos(5);
-        this.momo.jump();
-      };
-    });
   }
-
-  click(){
-    this.momo.jump();
+  
+  //// old code was click to jump. leaving here for a second
+  // click(){
+  //   this.momo.jump();
+  // }
+  
+  addEventListeners(){
+    window.addEventListener("keydown", this.keydownEvents.bind(this))
+    //// if adding event listeners to canvas, need to pass in bound callback
+    // this.canvas.addEventListener("mousedown", this.click.bind(this));
   }
+  
+  keydownEvents(e){
+    if (e.key === "ArrowLeft") {
+      this.momo.direction = "left";
+      this.momo.moveLeft();
+    } else if (e.key === "ArrowUp") {
+      this.momo.direction = "up";
+      this.momo.jump();
 
-  //// score 
+      // fall through platform if not on ground
+    } else if (e.key === "ArrowDown") {
+      this.momo.direction = "down";
+      this.momo.moveDown();
+      
+    } else if (e.key === "ArrowRight"){
+      // this.momo.calcXPos(5);
+      this.momo.direction = "right";
+      this.momo.moveRight();
+    } // else if (e.key === )
+    // else if (e.key === ' ' || e.key === "Spacebar"){
+    // };
+    /// ^ to do later: add action key for spacebar
+    ;
+  };
+
+
+  //// score -> update this.score when you beat a mini-game
+
 
   //// resetScore
 

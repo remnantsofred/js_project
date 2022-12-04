@@ -5,9 +5,14 @@ import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
-  JUMP_SPEED: -8,
+  FRICTION: 2,
+  JUMP_SPEED: -30,
   GROUND: 400,
   TERMINAL_VEL:  12,
+  WALK_SPEED: 5,
+  JOG_SPEED: 10,
+  RUN_SPEED: 15,
+  MAX_MOMO_SPEED: 20,
   LEFTWALL: 0,
   RIGHTWALL: 550,
 };
@@ -39,6 +44,7 @@ export default class Momo {
     this.calcXPos.bind(this);
     this.calcYPos.bind(this);
     this.jump.bind(this);
+    this.direction = null;
   }
 
   
@@ -46,6 +52,7 @@ export default class Momo {
   drawMomo(){
     this.ctx.clearRect(0,0,600, 600);
     this.calcYPos();
+    this.calcXPos();
     if(this.xVelocity > 0)  {
       this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
@@ -77,38 +84,78 @@ export default class Momo {
   // }
 
   // update Y position (height / vertical pos)
-  calcYPos(yVelocity){
+  calcYPos(){
+      /// if momo is currently higher than ground,
       if (this.y <= CONSTANTS.GROUND) {
+        /// momo falls down
         this.y += this.yVelocity
+        // if momo tries to go lower than floor, stop her at floor
         if (this.y > 400)
           this.y = 400;
       };
+      // as long as momo isn't falling beyond fast rate (12), add gravity (which is positive, so go down)
       if(this.yVelocity < CONSTANTS.TERMINAL_VEL ){
           this.yVelocity += CONSTANTS.GRAVITY;
       } 
   }
   
   // updates X position (horizontal across board)
-  calcXPos(xVelocity){
-      if (this.x >= CONSTANTS.LEFTWALL) {
-        this.x += this.xVelocity
-        if (this.x < 0)
-          this.x = 0;
-      };
-      if (this.xVelocity < CONSTANTS.TERMINAL_VEL ){
-          this.xVelocity += CONSTANTS.GRAVITY;
-      } 
-      if (this.x <= CONSTANTS.RIGHTWALL){
-        this.x -= this.xVelocity
-        if (this.x > 550)
-          this.x = 550;
-      };
+  calcXPos(){
+      
+    //// if momo is moving , update x position
+    //// update x position with xvelocity, up to max momo speed
+    //// make sure you dont go beyond walls
+    //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
+    //// friction here is a positive number (2)
+    console.log("start x", this.x)
+
+    if (this.xVelocity > 0 && this.direction === "left"){
+      this.x -= this.xVelocity;
+      if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
+        this.xVelocity -= CONSTANTS.FRICTION;
+      }
+    } 
+
+
+    // if (this.x >= CONSTANTS.LEFTWALL) {
+        
+    //     this.x += this.xVelocity
+    //     if (this.x < 0)
+    //       this.x = 0;
+
+    //   };
+    //   if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED && this.xVelocity > 0){
+    //       this.xVelocity += CONSTANTS.FRICTION;
+    //   } 
+    //   if (this.x <= CONSTANTS.RIGHTWALL){
+    //     this.x -= this.xVelocity
+    //     if (this.x > 550)
+    //       this.x = 550;
+    //   };
   }
 
 
   jump(){
-      if (this.y === CONSTANTS.GROUND){
-        this.yVelocity = -30;
-      };
+      // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
+    if (this.y === CONSTANTS.GROUND){
+      this.yVelocity = CONSTANTS.JUMP_SPEED;
+    };
   }
+  
+  moveLeft(){
+    this.xVelocity = CONSTANTS.WALK_SPEED;
+  }
+  
+  moveRight(){
+    this.xVelocity = CONSTANTS.WALK_SPEED;
+    
+  }
+  moveDown(){
+    if (this.y !== CONSTANTS.GROUND){
+      /// need to this this part once I make platforms
+      this.yVelocity = -CONSTANTS.JUMP_SPEED;
+    };
+  }
+
+
 }
