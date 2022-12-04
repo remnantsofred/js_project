@@ -5,12 +5,12 @@ import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
-  FRICTION: 0.5,
+  FRICTION: 1,
   JUMP_SPEED: -30,
   GROUND: 625,
   TERMINAL_VEL:  12,
-  WALK_SPEED: 10,
-  RUN_SPEED: 15,
+  WALK_SPEED: 5,
+  RUN_SPEED: 12,
   MAX_MOMO_SPEED: 20,
   LEFTWALL: 0,
   RIGHTWALL: 800,
@@ -60,7 +60,7 @@ export default class Momo {
     if(this.xVelocity > 0 && this.direction === "right")  {
       this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, this.x, this.y, spriteWidth, spriteHeight);
       // if (gameFrame % staggerFrames == 0){       //old version
-      if (gameFrame % (this.xVelocity / 1.25) == 0){
+      if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
         if (frameX < 3) frameX ++;
         else frameX = 1;
@@ -115,14 +115,12 @@ export default class Momo {
   }
   
   // updates X position (horizontal across board)
+  //// if momo is moving , update x position
+  //// update x position with xvelocity, up to max momo speed
+  //// make sure you dont go beyond walls
+  //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
+  //// friction here is a positive number (2)
   calcXPos(){
-      
-    //// if momo is moving , update x position
-    //// update x position with xvelocity, up to max momo speed
-    //// make sure you dont go beyond walls
-    //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
-    //// friction here is a positive number (2)
-
     if (this.xVelocity > 0 && this.direction === "left"){
       this.x -= this.xVelocity;
       if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
@@ -162,9 +160,13 @@ export default class Momo {
   }
   
   moveRight(speed){
-    this.xVelocity = CONSTANTS.WALK_SPEED;
-    
+    if (speed === "walk"){
+      this.xVelocity = CONSTANTS.WALK_SPEED;
+    } else if (speed === "run"){
+        this.xVelocity = CONSTANTS.RUN_SPEED;
+    }
   }
+
   moveDown(){
     if (this.y !== CONSTANTS.GROUND){
       /// need to this this part once I make platforms
