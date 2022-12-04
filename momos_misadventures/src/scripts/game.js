@@ -38,26 +38,23 @@ export default class Game {
     // this.canvas.addEventListener("mousedown", this.click.bind(this));
   }
   
+  /// maybe change momo to run regardless because jumping is better
   keydownEvents(e){
     if (e.key === "ArrowLeft") {
-      this.momo.direction = "left";
       if (e.repeat){
         this.momo.moveLeft("run");
       } else if (!e.repeat){
         this.momo.moveLeft("walk");
       }
     } else if (e.key === "ArrowUp") {
-      this.momo.direction = "up";
       this.momo.jump();
 
       // fall through platform if not on ground
     } else if (e.key === "ArrowDown") {
-      this.momo.direction = "down";
       this.momo.moveDown();
       
     } else if (e.key === "ArrowRight"){
       // this.momo.calcXPos(5);
-      this.momo.direction = "right";
       if (e.repeat){
         this.momo.moveRight("run");
       } else if (!e.repeat){

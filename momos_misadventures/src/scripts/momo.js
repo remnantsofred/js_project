@@ -5,7 +5,7 @@ import Object from './object';
 
 const CONSTANTS = {
   GRAVITY: 2,
-  FRICTION: 1,
+  FRICTION: 1.5,
   JUMP_SPEED: -30,
   GROUND: 625,
   TERMINAL_VEL:  12,
@@ -123,35 +123,43 @@ export default class Momo {
   calcXPos(){
     if (this.xVelocity > 0 && this.direction === "left"){
       this.x -= this.xVelocity;
-      if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
+      if (this.yVelocity === 0) {
         this.xVelocity -= CONSTANTS.FRICTION;
       }
+      // so momo can't walk past canvas wall
       if (this.x <= 0){
         this.x = 0;
+        this.xVelocity = 0;
       }
     } 
     
     if (this.xVelocity > 0 && this.direction === "right"){
       this.x += this.xVelocity;
-      if (this.xVelocity < CONSTANTS.MAX_MOMO_SPEED){
+      if (this.yVelocity === 0 ){
         this.xVelocity -= CONSTANTS.FRICTION;
       }
+      // so momo can't walk past canvas wall
       if (this.x >= (CONSTANTS.RIGHTWALL - spriteWidth)){
         this.x = (CONSTANTS.RIGHTWALL - spriteWidth);
+        this.xVelocity = 0;
       }
     } 
 
+    
   }
 
 
   jump(){
       // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
+    // this.direction = "up";
     if (this.y === CONSTANTS.GROUND){
       this.yVelocity = CONSTANTS.JUMP_SPEED;
     };
+
   }
   
   moveLeft(speed){
+    this.direction = "left";
     if (speed === "walk"){
     this.xVelocity = CONSTANTS.WALK_SPEED;
     } else if (speed === "run"){
@@ -160,6 +168,7 @@ export default class Momo {
   }
   
   moveRight(speed){
+    this.direction = "right";
     if (speed === "walk"){
       this.xVelocity = CONSTANTS.WALK_SPEED;
     } else if (speed === "run"){
@@ -168,6 +177,7 @@ export default class Momo {
   }
 
   moveDown(){
+    this.direction = "down";
     if (this.y !== CONSTANTS.GROUND){
       /// need to this this part once I make platforms
       this.yVelocity = -CONSTANTS.JUMP_SPEED;
