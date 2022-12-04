@@ -52,6 +52,8 @@ export default class Momo {
     this.ctx = ctx;
     this.x = canvasWidth / 8;
     this.y = CONSTANTS.GROUND;
+    this.width = 0; 
+    this.height = 0;
     this.yVelocity = 0;
     this.xVelocity = 0;
     this.calcXPos.bind(this);
@@ -68,6 +70,8 @@ export default class Momo {
     this.calcXPos();
     if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
       this.ctx.drawImage(momo, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+      momo.width = walkspriteWidth * sizeModifier;
+      momo.height = walkspriteHeight * sizeModifier;
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
@@ -78,6 +82,8 @@ export default class Momo {
       gameFrame++
     } else if (this.jumped === false && this.xVelocity < 0 && this.direction === "left"){
       this.ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+      momo.width = walkspriteWidth * sizeModifier;
+      momo.height = walkspriteHeight * sizeModifier;
       // if (gameFrame % staggerFrames == 0){       //old version
       if (gameFrame % staggerFrames == 0){
         // replace staggerFrames with xVelocity/3)
@@ -88,6 +94,8 @@ export default class Momo {
       gameFrame++
     } else if (this.jumped === true && this.direction === "right"){
       this.ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
+      momo.width = jumpspriteWidth * sizeModifier;
+      momo.height = jumpspriteHeight * sizeModifier;
       if (this.yVelocity < -3 && this.yVelocity > -30){
         frameX = 2;
       } else if (this.yVelocity < 3 && this.yVelocity >= -3) {
@@ -98,6 +106,8 @@ export default class Momo {
       
     } else if (this.jumped === true && this.direction === "left"){
       this.ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
+      momo.width = jumpspriteWidth * sizeModifier;
+      momo.height = jumpspriteHeight * sizeModifier;
       if (this.yVelocity < -3 && this.yVelocity > -30){
         frameX = 0;
       } else if (this.yVelocity < 3 && this.yVelocity > -3) {
@@ -109,6 +119,8 @@ export default class Momo {
      
     } else {
       this.ctx.drawImage(momo, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+      momo.width = walkspriteWidth * sizeModifier;
+      momo.height = walkspriteHeight * sizeModifier;
     };
     requestAnimationFrame(this.drawMomo.bind(this));
   }
