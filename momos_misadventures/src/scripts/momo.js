@@ -163,6 +163,7 @@ export default class Momo {
         if (this.y >= this.momoBottom()){
           this.y = this.momoBottom();
           this.jumped = false;
+          this.yVelocity = 0;
           // this.grounded = true;
         }
       } 
