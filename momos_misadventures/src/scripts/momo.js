@@ -68,13 +68,13 @@ export default class Momo {
     // this.ctx.clearRect(0,0,800,800);
     let prevPos = this.y;
     this.calcYPos();
-    if (this.y === prevPos){
+    //// moving this section below and line 69 to collision logic
+    if (this.y === prevPos && !this.jumped){
       this.grounded = true;
     } else {
       this.grounded = false;
     }
 
-    console.log(this.y)
     // this.calcYPos();
     this.calcXPos();
     if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
@@ -152,13 +152,17 @@ export default class Momo {
   calcYPos(){
       /// if momo is currently higher than ground,
       // this.calcXPos();
-      if(this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom()){
+      console.log(this.yVelocity)
+      if(this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom() && !this.grounded){
           this.yVelocity += CONSTANTS.GRAVITY;
       } 
+      if(this.grounded && !this.jumped){
+        this.yVelocity = 0;
+      }
       if (this.y <= this.momoBottom()) {
         /// momo falls down
         this.y += this.yVelocity
-        console.log("did I jump?")
+        
         // if momo tries to go lower than floor, stop her at floor. wipe her "jumped" state
         if (this.y >= this.momoBottom()){
           this.y = this.momoBottom();
@@ -180,8 +184,7 @@ export default class Momo {
   //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
   //// friction here is a positive number (2)
   calcXPos(){
-    // console.log(this.xVelocity);
-    console.log(this.yVelocity);
+
     //// if momo is not still
     if (this.xVelocity !== 0){
       //// update her x position by her velocity (left will be negative, right is positive)
@@ -226,9 +229,17 @@ export default class Momo {
       // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
     // this.direction = "up";
     // if (this.y === CONSTANTS.GROUND){
-    if (this.jumped === false){
+    if (this.grounded){
+      console.log("jump")
       this.jumped = true;
+      this.grounded = false;
       this.yVelocity = CONSTANTS.JUMP_SPEED;
+
+    //// old working version  
+    // if (this.jumped === false){
+    //   this.jumped = true;
+    //   this.grounded = false;
+    //   this.yVelocity = CONSTANTS.JUMP_SPEED;
       // if (this.collide()){
       //   this.land();
       // }
@@ -349,24 +360,42 @@ export default class Momo {
 
   collide(obj){
       // collision
+      //// if the object is "collidable" from their object attribute "obj.collision" (boolean)
       if (obj.collision === true) {
         //// this is down collision
-        if (this.grounded === false &&
+        if (!this.grounded &&
+            //// if momo's left corner is to the left of the object length AND
             this.x < obj.x + obj.width &&
+            //// momo's right corner overlaps/goes beyond object left corner
             this.x + this.width > obj.x &&  
+            //// momo is higher than object 
             this.y < obj.y + obj.height &&
+            //// momo's feet is lower than object left corner
             this.y + this.height > obj.y){
-          this.yVelocity = 0;
-          console.log("collided")
-          // this.xVelocity = 0;
-          this.jumped = false;
-          // this.x = obj.x;
+          
+          if (this.yVelocity > 0){
+            this.yVelocity = 0;
+          }
+  
+          //// once momo collides, ground her.
+          this.grounded = true;
+          //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
+          //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
+          //// the jump can register
+          if (this.yVelocity !== CONSTANTS.JUMP_SPEED){
+            this.jumped = false;
+          }
+          
+        } else {
+          this.grounded = false;
         }
-      // else {
+      // } else {
       //   // no collision
       // }
       }
   }
+
+  
   
   //// this is momo's true ground since she has height and we don't want her to sink below ground
   //// momo bottom will change if you change her height so just use the standing sprite height

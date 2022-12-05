@@ -90,11 +90,11 @@ export default class Game {
 
   draw(){
     this.ctx.clearRect(0,0,800,800);
-    this.momo.drawMomo(this.ctx);
     this.objects.forEach((obj)=>{
       obj.drawObject(this.ctx);
       this.momo.collide(obj);
     });
+    this.momo.drawMomo(this.ctx);
     
     requestAnimationFrame(this.draw.bind(this));
   }
