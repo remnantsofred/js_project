@@ -1,5 +1,9 @@
-import Momo from './momo';
+import Momo, { CONSTANTS } from './momo';
 import Level from './level'
+import GameObject from './game_object';
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
+
+
 
 //// starting a new game should entail:
 //// import /load game_view (or does new game go into game_view?) --> ask someone 
@@ -7,23 +11,37 @@ import Level from './level'
 //// loop over all opjects, draw all
 //// logic to start a minigame and continue to next one if win (and update score)
 //// go back to main screen on loss 
+
+
 export default class Game {
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
     this.dimensions = { width: canvas.width, height: canvas.height };
     this.canvas = canvas;
-    this.momo = new Momo(this.dimensions.width, this.dimensions.height, this.ctx);
+    // this momo is the real momo, okay. 
+    this.momo = new Momo(this.dimensions.width, this.dimensions.height);
     this.level = new Level(this.dimensions);
-    this.play();
     this.score = 0;
-  }
-  
-
+    //need to refactor this.objects based on levels in the future
+    //this is proof of concept
+    const ground = new GameObject(this.ctx, 0, CONSTANTS.GROUND, CANVAS_WIDTH, 61, "#449903", false, false);  //// this is the ground
+    this.objects = [
+      ground,
+      new GameObject(this.ctx, 400, 250, 100, 10, "#000000", true, false), 
+      new GameObject(this.ctx, 250, 400, 100, 10, "#000000", true, false),
+      new GameObject(this.ctx, 550, 400, 100, 10, "#000000", true, false)
+    ];
+    // GameObject constructor(ctx, x, y, width, height, color, collision, bounce) {
+      this.play();
+    }
+    
+    
   
   play(){
     // this.running = true;
-    this.momo.drawMomo();
+    this.draw();
     this.addEventListeners();
+    
     // TO ADD: cycle thru all objects & draw each
   }
   
@@ -68,7 +86,23 @@ export default class Game {
   };
 
 
+  //// draw
+
+  draw(){
+    this.ctx.clearRect(0,0,800,800);
+    this.momo.drawMomo(this.ctx);
+    this.objects.forEach((obj)=>{
+      obj.drawObject(this.ctx);
+      this.momo.collide(obj);
+    });
+    
+    requestAnimationFrame(this.draw.bind(this));
+  }
+
+
   //// score -> update this.score when you beat a mini-game
+
+
 
 
   //// resetScore
@@ -81,6 +115,10 @@ export default class Game {
 
   //// next game
 
+  //// handle Collisions
+  handleCollisions(){
+    // for()
+  }
   
 
 

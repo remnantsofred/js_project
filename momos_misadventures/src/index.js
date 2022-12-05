@@ -6,8 +6,8 @@ import Momo from './scripts/momo';
 const canvas = document.getElementById("gamescreen");
 const ctx = canvas.getContext("2d");
 
-const CANVAS_WIDTH = canvas.width = 800;
-const CANVAS_HEIGHT = canvas.height = 600;
+export const CANVAS_WIDTH = canvas.width = 800;
+export const CANVAS_HEIGHT = canvas.height = 600;
 
 /////////////////////////////////////////////////////////////
 //// this part of the code is me learning. will remove later
@@ -22,10 +22,6 @@ const CANVAS_HEIGHT = canvas.height = 600;
 //// start game here
 
 let game = new Game(canvas);
-
 console.log("Webpack is working!")
-
-
-
-
+console.log("where is my rectangle");
 
