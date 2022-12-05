@@ -385,9 +385,10 @@ export default class Momo {
           if (this.yVelocity !== CONSTANTS.JUMP_SPEED){
             this.jumped = false;
           }
-          
+          return true;
         } else {
           this.grounded = false;
+          return false;
         }
       // } else {
       //   // no collision

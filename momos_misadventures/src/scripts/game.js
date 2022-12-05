@@ -24,12 +24,16 @@ export default class Game {
     this.score = 0;
     //need to refactor this.objects based on levels in the future
     //this is proof of concept
-    const ground = new GameObject(this.ctx, 0, CONSTANTS.GROUND, CANVAS_WIDTH, 61, "#449903", false, false);  //// this is the ground
+    //// this is the ground below:
+    const ground = new GameObject(this.ctx, 0, CONSTANTS.GROUND, CANVAS_WIDTH, 61, "#449903", false, false);  
     this.objects = [
       ground,
-      new GameObject(this.ctx, 400, 250, 100, 10, "#000000", true, false), 
-      new GameObject(this.ctx, 250, 400, 100, 10, "#000000", true, false),
-      new GameObject(this.ctx, 550, 400, 100, 10, "#000000", true, false)
+      //// if I can't figure out why the first object collision doesn't work, set the first object as 0 and in the ground
+      new GameObject(this.ctx, 0, 800, 0, 0, "#000000", true, false), 
+      new GameObject(this.ctx, 400, 200, 100, 10, "#000000", true, false), 
+      new GameObject(this.ctx, 250, 400, 100, 10, "#ffffff", true, false),
+      new GameObject(this.ctx, 350, 400, 100, 10, "#aaaaaa", true, false),
+      new GameObject(this.ctx, 550, 400, 100, 10, "#555555", true, false),
     ];
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce) {
       this.play();
@@ -90,10 +94,15 @@ export default class Game {
 
   draw(){
     this.ctx.clearRect(0,0,800,800);
-    this.objects.forEach((obj)=>{
+    for(const obj of this.objects){
+      if (this.momo.collide(obj)){
+          break;
+      };
+    };
+
+    for(const obj of this.objects){
       obj.drawObject(this.ctx);
-      this.momo.collide(obj);
-    });
+    };
     this.momo.drawMomo(this.ctx);
     
     requestAnimationFrame(this.draw.bind(this));
