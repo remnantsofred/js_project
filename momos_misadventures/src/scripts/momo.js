@@ -66,14 +66,15 @@ export default class Momo {
 
   drawMomo(ctx){
     // this.ctx.clearRect(0,0,800,800);
-    let nextyPos = this.calcYPos();
-    if (this.y === nextyPos){
+    let prevPos = this.y;
+    this.calcYPos();
+    if (this.y === prevPos){
       this.grounded = true;
     } else {
       this.grounded = false;
     }
-    this.y = nextyPos;
-    console.log(this.grounded);
+
+    console.log(this.y)
     // this.calcYPos();
     this.calcXPos();
     if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
@@ -151,25 +152,24 @@ export default class Momo {
   calcYPos(){
       /// if momo is currently higher than ground,
       // this.calcXPos();
-      let newY = this.y
-      if (this.momoBottom() < CONSTANTS.GROUND) {
+      if(this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom()){
+          this.yVelocity += CONSTANTS.GRAVITY;
+      } 
+      if (this.y <= this.momoBottom()) {
         /// momo falls down
-        newY += this.yVelocity
+        this.y += this.yVelocity
+        console.log("did I jump?")
         // if momo tries to go lower than floor, stop her at floor. wipe her "jumped" state
-        if (newY > this.momoBottom()){
-          newY = this.momoBottom();
+        if (this.y >= this.momoBottom()){
+          this.y = this.momoBottom();
           this.jumped = false;
           // this.grounded = true;
         }
       } 
       // as long as momo isn't falling beyond fast rate (12), apply gravity (which is positive, so go down)
-      if(this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y !== this.momoBottom() && !this.grounded){
-          this.yVelocity += CONSTANTS.GRAVITY;
-      } 
       // if (this.y === this.momoBottom()){
       //   this.yVelocity = 0;
       // }
-      return newY;
   }
   
   // updates X position (horizontal across board)
@@ -225,7 +225,7 @@ export default class Momo {
       // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
     // this.direction = "up";
     // if (this.y === CONSTANTS.GROUND){
-    if (this.jumped === false || this.grounded === true){
+    if (this.jumped === false){
       this.jumped = true;
       this.yVelocity = CONSTANTS.JUMP_SPEED;
       // if (this.collide()){
@@ -368,8 +368,9 @@ export default class Momo {
   }
   
   //// this is momo's true ground since she has height and we don't want her to sink below ground
+  //// momo bottom will change if you change her height so just use the standing sprite height
   momoBottom(){
-    return CONSTANTS.GROUND - this.height;
+    return CONSTANTS.GROUND - (walkspriteHeight * sizeModifier);
   }
 
 
