@@ -2,7 +2,7 @@
 
 
 body {
-  background-color: goldenrod;
+  background-color: #daa520;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,7 +13,7 @@ body {
   font-family: Nerko One;
   font-size: 48px;
   color: whitesmoke
-}
+} 
 
 
 #gamescreen {
@@ -28,7 +28,9 @@ body {
 
 #maintitle {
   width: 50%;
+  margin: 20px;
 }
+
 
 
 /* 

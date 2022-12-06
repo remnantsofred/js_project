@@ -15,6 +15,16 @@ export default class GameView {
   
 
   //// border and background outside of the canvas (or will this just be css?)
+
+  //// mini-game title, instructions
+
+  //// score/level counter
+
+  //// timer countdown
+
+  //// spash screen/animation for win
+
+  //// splash screen/animation for loss
  
 
   //// draw the canvas? 
