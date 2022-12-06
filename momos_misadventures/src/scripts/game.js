@@ -12,6 +12,10 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
 //// logic to start a minigame and continue to next one if win (and update score)
 //// go back to main screen on loss 
 
+const background = new Image();
+background.src = "./src/assets/backgrounds/kitchen_simple.png"
+// background.src = "/Users/daphnelam/Desktop/aA/js_project/momos_misadventures/src/assets/backgrounds/kitchen_simple.png"
+
 
 export default class Game {
   constructor(canvas, level) {
@@ -24,16 +28,27 @@ export default class Game {
     this.score = 0;
     //need to refactor this.objects based on levels in the future
     //this is proof of concept
+    /// use #FFffff for transparent
     //// this is the ground below:
     const ground = new GameObject(this.ctx, 0, CONSTANTS.GROUND, CANVAS_WIDTH, 61, "#449903", false, false);  
+    const fridge = new GameObject(this.ctx, 56, 110, 143, 1, "#FFffff", true, false)
+    const sinkLevel = new GameObject(this.ctx, 209, 346, 538, 1, "#FFffff", true, false)
+    const leftShelf = new GameObject(this.ctx, 404, 227, 140, 1, "#FFffff", true, false)
+    const rightShelf = new GameObject(this.ctx, 579, 173, 140, 1, "#FFffff", true, false)
+
+
     this.objects = [
       ground,
       //// if I can't figure out why the first object collision doesn't work, set the first object as 0 and in the ground
       new GameObject(this.ctx, 0, 800, 0, 0, "#000000", true, false), 
-      new GameObject(this.ctx, 400, 200, 100, 10, "#000000", true, false), 
-      new GameObject(this.ctx, 250, 400, 100, 10, "#ffffff", true, false),
-      new GameObject(this.ctx, 350, 400, 100, 10, "#aaaaaa", true, false),
-      new GameObject(this.ctx, 550, 400, 100, 10, "#555555", true, false),
+      fridge,
+      sinkLevel,
+      leftShelf,
+      rightShelf
+      // new GameObject(this.ctx, 400, 200, 100, 10, "#000000", true, false), 
+      // new GameObject(this.ctx, 250, 400, 100, 10, "#ffffff", true, false),
+      // new GameObject(this.ctx, 350, 400, 100, 10, "#aaaaaa", true, false),
+      // new GameObject(this.ctx, 550, 400, 100, 10, "#555555", true, false),
     ];
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce) {
       this.play();
@@ -91,9 +106,15 @@ export default class Game {
 
 
   //// draw
+  //// for now add background directly in game objects no collision
+  //// but later have it draw the background first then momo and the objects
+  //// because the game should cycle through mini game so each mini game should have a background image, etc
 
   draw(){
     this.ctx.clearRect(0,0,800,800);
+    ////  this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, 50, 450, spriteWidth, spriteHeight);
+    this.ctx.drawImage(background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75);
+
     for(const obj of this.objects){
       if (this.momo.collide(obj)){
           break;

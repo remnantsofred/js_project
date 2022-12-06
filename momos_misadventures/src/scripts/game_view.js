@@ -4,10 +4,15 @@
 //// link to about game
 //// later/bonus: splashscreen transitions between games
 
+
+// const title = new Image();
+// title.src = "../assets/backgrounds/title.png"
+
 export default class GameView {
 
 
   ////title
+  
 
   //// border and background outside of the canvas (or will this just be css?)
  

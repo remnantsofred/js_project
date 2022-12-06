@@ -23,5 +23,5 @@ export const CANVAS_HEIGHT = canvas.height = 600;
 
 let game = new Game(canvas);
 console.log("Webpack is working!")
-console.log("where is my rectangle");
+
 

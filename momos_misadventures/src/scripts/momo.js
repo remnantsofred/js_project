@@ -395,7 +395,22 @@ export default class Momo {
       // }
       }
   }
-
+          //// this bottom part isn't working
+        // } else if (!this.grounded &&
+        //   //// if momo's left corner is to the left of the object length AND
+        //   this.x < obj.x + obj.width &&
+        //   //// momo's right corner overlaps/goes beyond object left corner
+        //   this.x + this.width > obj.x &&  
+        //   //// momo is lower than object 
+        //   this.y > obj.y + obj.height &&
+        //   //// momo's heade is higher than object left corner
+        //   this.y + this.height < obj.y) {
+        //     console.log("top collision")
+        //     if (this.yVelocity < 0){
+        //       this.yVelocity = 12;
+        //       this.grounded = false;
+        //       this.jumped = false;
+        //     }
   
   
   //// this is momo's true ground since she has height and we don't want her to sink below ground
