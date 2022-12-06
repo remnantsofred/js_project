@@ -63,3 +63,11 @@
 //   // }
 //   }
 // }
+
+
+
+//// find the old code for the old platform collision logic where she gets sucked into the bottom of the platform
+/// game idea: momo goes to the hairdresser. jump into the correct hair bowl to get the right result
+/// show funny momo hair styles (need new sprites OR LOL COPY PASTE HAIR ONTO HER and make them yourself)
+
+

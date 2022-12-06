@@ -28,8 +28,8 @@ export default class Game {
     this.canvas = canvas;
     // this momo is the real momo, okay. 
     this.momo = new Momo(this.dimensions.width, this.dimensions.height);
-    this.score = 0;
     /// use #FFffff for transparent
+    /// use #7cfd21 for bright green (starting out to gauge pos)
     //// this is the ground below:
     const ground = new GameObject(this.ctx, 0, CONSTANTS.GROUND, CANVAS_WIDTH, 61, "#449903", false, false, false);  
     //// if I can't figure out why the first object collision doesn't work, set the first object as 0 and in the ground
@@ -39,11 +39,20 @@ export default class Game {
     const sinkLevel = new GameObject(this.ctx, 209, 346, 538, 1, "#FFffffff", true, false, false);
     const leftShelf = new GameObject(this.ctx, 404, 227, 140, 1, "#FFffffff", true, false, false);
     const rightShelf = new GameObject(this.ctx, 579, 173, 140, 1, "#FFffffff", true, false, false);
+    //// level 4 objects
+    const curtainrod = new GameObject(this.ctx, 265, 160, 165, 5, "#7cfd21", true, false, true);
+    // const couchCushion = new GameObject(this.ctx, 92, 431, 280, 5, "#7cfd21", true, false, false);
+    const couchCushion = new GameObject(this.ctx, 290, 430, 90, 5, "#7cfd21", true, false, false);
+    const couchTop = new GameObject(this.ctx, 80, 360, 160, 5, "#7cfd21", true, false, false);
+    const tvConsole = new GameObject(this.ctx, 478, 416, 276, 5, "#7cfd21", true, false, false);
+    const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#7cfd21", true, false, false);
     //// need to fix Ashy later
-    const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#FFffffff", true, false, false);
-    const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#FFffffff", true, false, false);
+    const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
+    const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
-      
+    // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
+
+    //// forbidden furniture v1 (kitchen)  
     const level1Objects = [
       ground,
       firstObjectHidden,
@@ -52,68 +61,81 @@ export default class Game {
       leftShelf,
       rightShelf
     ];
-      
+    //// ambush ashy (living room)  
     const level2Objects = [
       ground,
       firstObjectHidden
       
     ];
-      
+    //// kill the fly (living room)  
     const level3Objects = [
       ground,
       firstObjectHidden
       
     ];
+    //// forbidden furniture v2 (living room)
+    const level4Objects = [
+      ground,
+      firstObjectHidden,
+      curtainrod,
+      couchCushion,
+      couchTop,
+      // tvConsole,
+      tv
       
+    ];
+
     this.levels = [ 
-      new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level1Background, 6, level1Objects, fridge),
-      new Level('Ambush Ashy!', '', level2Background, 6, level2Objects, Ashy),
-      new Level('Kill the fly!', '', level2Background, 6, level3Objects, fly),
+      new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level1Background, 10, level1Objects, fridge),
+      new Level('Ambush Ashy!', '', level2Background, 10, level2Objects, Ashy),
+      new Level('Kill the fly!', '', level2Background, 10, level3Objects, fly),
+      new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level2Background, 10, level4Objects, curtainrod),
     ];
 
     this.prevlevel = null;
-    this.level = this.randomSelectLevel();
+    // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
+    this.level = this.levels[0 ];
     this.winCounter = 0;
     this.wonMiniGame = false;
     this.lostGame = false;
     this.timeremaining = this.level.maxtime;
+    this.score = 0;
+    this.running = false;
     this.play();
-    /// do I need a running toggle?
-    // this.running = false;
+
   }
-    
-  //// random level select logic: (is this problematic beacuse when we restart the old array is restarted?)
-  //// if this.prevlevel is null, then select first level
-  //// else if this.prevlevel is this.levels[0], then return this.levels[1]
-  //// else if this.prevlevel is this.levels[1], then return this.levels[2]
-  //// else if this.prevlevel is this.levels[2], then return this.levels[3]
-  //// else if this.prevlevel is this.levels[3], then shuffle array and return this.levels[0]
+
+
+  //// return a random level from this.levels (plural);
+  //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
-    //// return a random level from this.levels (plural);
-
-    if (!this.prevlevel) {
-      return this.levels[0];
-      
-      // console.log(this.prevlevel)
-    // } else if (){
-      
-    // } else if (){
-      
-    // } else if (){
-      
-    // } else if (){
+    // if (!this.prevlevel) {
+    //   return this.levels[0];
+    // } else if (this.prevlevel === this.levels[0]){
+    //   return this.levels[1];
+    // } else if (this.prevlevel === this.levels[1]){
+    //   return this.levels[2];
+    // } else if (this.prevlevel === this.levels[2]){
+    //   return this.levels[3];
+    // } else if (this.prevlevel === this.levels[3]){
     //   this.shuffleLevelArray();
-    } else 
-    return this.levels[1];
+    //   return this.levels[0];
+    // }
 
-
+    //// testing level4
+    if (this.prevlevel === this.levels[0]){
+      return this.levels[3];    
+    } else {
+      return this.levels[0];   
+    }
   }
 
   shuffleLevelArray(){
-
+    this.levels = this.levels.sort(() => Math.random() - 0.5);
   }
   
   play(){
+    this.running = true;
     this.draw();
     this.addEventListeners();
   }
@@ -133,81 +155,88 @@ export default class Game {
         this.momo.moveLeft("walk");
       }
     } else if (e.key === "ArrowUp") {
-      this.momo.jump();
-      
-      // fall through platform if not on ground
-    } else if (e.key === "ArrowDown") {
-      this.momo.moveDown();
-      
+        this.momo.jump();
+    } else if (e.key === "ArrowDown") {     // fall through platform if not on ground
+        this.momo.moveDown();
     } else if (e.key === "ArrowRight"){
-      // this.momo.calcXPos(5);
       if (e.repeat){
         this.momo.moveRight("run");
       } else if (!e.repeat){
         this.momo.moveRight("walk");
       }
-    } // else if (e.key === )
-    // else if (e.key === ' ' || e.key === "Spacebar"){
-      // };
-      /// ^ to do later: add action key for spacebar
-      
+    } else if (e.key === ' ' || e.key === "Spacebar"){
+        this.pauseGame();
     };
+    //// ^ to do later: add action key for spacebar          
+  };
     
-    
-    
-  draw(){
-    this.ctx.clearRect(0,0,800,800);         /// clear the canvas
-    this.level.drawBackground(this.ctx);     /// draw the level's background
-    this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
-    this.wonMiniGame = false;
-    for(const obj of this.level.objects){          //// iterate through this level's obejcts and check collision
-      if (this.momo.collide(obj)){
-        if (obj.target === true) {
-          console.log(this.winCounter)
-          this.winCounter += 1;
-          if (this.winCounter > 11){
-            this.wonMiniGame = true;
-          }
-        }       
-        break;
-      };
-    };
-    
-    for(const obj of this.level.objects){         //// iterate through this level's obejcts and draw them
-      obj.drawObject(this.ctx);
-    };
 
-    this.momo.drawMomo(this.ctx);
-    this.ctx.font = '22px serif';
-    this.ctx.fillStyle = "#daa520";
-    this.ctx.fillText('Score:', 657, 75);
-    this.ctx.fillText(this.score.toString(), 735, 75);          //// draw score
-    this.ctx.fillText('Time left:', 626, 100);                //// draw timer countdown
-    this.ctx.fillText(this.timeremaining.toString(), 735, 100);          //// draw score
-    ///// draw time left here
-    let id = requestAnimationFrame(this.draw.bind(this));
-    this.timeremaining -= 0.01;
-    // if (this.timeremaining <= 0){
-    //   this.lostGame = true;
-    //   cancelAnimationFrame(id);
-    //   this.loseGame();
-    //   console.log(this.lostGame);
-    // }
-    if (this.wonMiniGame){
-      cancelAnimationFrame(id);
-      this.winMiniGame();
-    };
+  draw(){
+    if (this.running){
+      this.ctx.clearRect(0,0,800,800);         /// clear the canvas
+      this.level.drawBackground(this.ctx);     /// draw the level's background
+      this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
+      this.wonMiniGame = false;
+      for(const obj of this.level.objects){    //// iterate through this level's obejcts and check collision
+        if (this.momo.collide(obj)){
+          if (obj.target === true) {          //// if she collides with winning object, win game
+            this.winCounter += 1;
+            if (this.winCounter > 11){
+              this.wonMiniGame = true;
+            }
+          }       
+          break;
+        };
+      };
+      
+      for(const obj of this.level.objects){         //// iterate through this level's obejcts and draw them
+        obj.drawObject(this.ctx);
+      };
+
+      this.momo.drawMomo(this.ctx);
+      this.ctx.font = '22px serif';
+      this.ctx.fillStyle = "#daa520";
+      this.ctx.fillText('Score:', 657, 75);
+      this.ctx.fillText(this.score.toString(), 735, 75);          //// draw score
+      this.ctx.fillText('Time left:', 626, 100);                //// draw timer countdown
+      this.ctx.fillText(this.timeremaining.toString(), 735, 100);          //// draw score
+      ///// draw time left here
+      let id = requestAnimationFrame(this.draw.bind(this));
+      this.timeremaining -= 0.02;
+      if (this.timeremaining <= 0){                 //// this is something wrong with this. 
+        this.lostGame = true;                       //// can't read this.level.maxtime;
+        cancelAnimationFrame(id);
+        this.loseGame();
+      }
+      if (this.wonMiniGame){
+        cancelAnimationFrame(id);
+        this.winMiniGame();
+      };
+    } else {
+      this.ctx.font = '50px serif';
+      this.ctx.fillStyle = "#daa520";
+      this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
+    }
   }
   
-
   //// pause
+  pauseGame(){
+    if (!this.running){
+      this.running = true;
+      this.draw();
+    } else {
+      this.running = false;
+    }
+  }
 
-  
   
   //// lose? when timer runs out. where do I decriment time? 
   //// resetScore
   loseGame(){
     /// splash for you lose! sad momo sound
+    this.level.drawLoseStatement(this.ctx);
+    //// black out / fade out screen
+    //// ask to play again? 
     this.resetGame();
   }
 
@@ -220,6 +249,7 @@ export default class Game {
       this.winMiniGame = false;
     } else {
       this.score = 0;                 //// wipe score if lost
+      this.lostGame = false;
     }
     this.level = this.randomSelectLevel();         //// select a new level
     this.timeremaining = this.level.maxtime;
@@ -233,16 +263,11 @@ export default class Game {
     //// show win statement 
     //// play win sound
     //// splash for you won!
+    this.level.drawWinStatement(this.ctx);
     this.resetGame();               //// restart game 
   }
 
-  
-  
-  //// handle Collisions
-  handleCollisions(){
-    // for()
-  }
-  
+
   
   
 }

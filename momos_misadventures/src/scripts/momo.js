@@ -35,7 +35,7 @@ const jumpspriteHeight = 156;
 let sizeModifier = 0.75;
 let frameX = 1;
 let frameY = 0;
-//set a maxFrame variable per row
+//set a maxFrame variable per row    ///// (if using multiple row sprite sheet)
 let gameFrame = 0;
 let staggerFrames = 10;
 //bigger staggerFrame is slower looking move
@@ -44,7 +44,7 @@ let staggerFrames = 10;
 
 export default class Momo {
 
-  constructor(canvasWidth, canvasHeight, bounce) {
+  constructor(canvasWidth, canvasHeight) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.calcXPos.bind(this);
@@ -68,7 +68,7 @@ export default class Momo {
   drawMomo(ctx){
     let prevPos = this.y;
     this.calcYPos();
-    //// moving this section below and line 69 to collision logic
+    //// moving this section below and line 69 to collision logic //// keeping here for now because it works
     if (this.y === prevPos && !this.jumped){
       this.grounded = true;
     } else {
@@ -87,39 +87,38 @@ export default class Momo {
       
       gameFrame++
     } else if (this.jumped === false && this.xVelocity < 0 && this.direction === "left"){
-      ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
-      this.width = walkspriteWidth * sizeModifier;
-      this.height = walkspriteHeight * sizeModifier;
-      if (gameFrame % staggerFrames == 0){
-        if (frameX < 3) frameX ++;
-        else frameX = 1;
-      }
+        ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+        this.width = walkspriteWidth * sizeModifier;
+        this.height = walkspriteHeight * sizeModifier;
+        if (gameFrame % staggerFrames == 0){
+          if (frameX < 3) frameX ++;
+          else frameX = 1;
+        }
        
       gameFrame++
     } else if (this.jumped === true && this.direction === "right"){
-      ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
-      this.width = jumpspriteWidth * sizeModifier;
-      this.height = jumpspriteHeight * sizeModifier;
-      if (this.yVelocity < -3 && this.yVelocity > -30){
-        frameX = 2;
-      } else if (this.yVelocity < 3 && this.yVelocity >= -3) {
-        frameX = 4;
-      } else if (this.yVelocity <= CONSTANTS.TERMINAL_VEL && this.yVelocity >= 3){
-        frameX = 5;
-      }
+        ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
+        this.width = jumpspriteWidth * sizeModifier;
+        this.height = jumpspriteHeight * sizeModifier;
+        if (this.yVelocity < -3 && this.yVelocity > -30){
+          frameX = 2;
+        } else if (this.yVelocity < 3 && this.yVelocity >= -3) {
+          frameX = 4;
+        } else if (this.yVelocity <= CONSTANTS.TERMINAL_VEL && this.yVelocity >= 3){
+          frameX = 5;
+        }
       
     } else if (this.jumped === true && this.direction === "left"){
-      ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
-      this.width = jumpspriteWidth * sizeModifier;
-      this.height = jumpspriteHeight * sizeModifier;
-      if (this.yVelocity < -3 && this.yVelocity > -30){
-        frameX = 0;
-      } else if (this.yVelocity < 3 && this.yVelocity > -3) {
-        frameX = 2;
-
-      } else {
-        frameX = 3;
-      }
+        ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
+        this.width = jumpspriteWidth * sizeModifier;
+        this.height = jumpspriteHeight * sizeModifier;
+        if (this.yVelocity < -3 && this.yVelocity > -30){
+          frameX = 0;
+        } else if (this.yVelocity < 3 && this.yVelocity > -3) {
+          frameX = 2;
+        } else {
+          frameX = 3;
+        }
      
     } else {
       ctx.drawImage(momoImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
@@ -128,31 +127,27 @@ export default class Momo {
     };
   }
 
-
   // update Y position (height / vertical pos)
   calcYPos(){
-      /// if momo is currently higher than ground,
-      // and as long as momo isn't falling beyond fast rate (12), apply gravity (which is positive, so go down)
-  
-      if(this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom() && !this.grounded){
-          this.yVelocity += CONSTANTS.GRAVITY;
-      } 
-      if(this.grounded && !this.jumped){
+    /// if momo is currently higher than ground,
+    /// and as long as momo isn't falling beyond fast rate (12), apply gravity (which is positive, so go down)
+    if (this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom() && !this.grounded){
+        this.yVelocity += CONSTANTS.GRAVITY;
+    } 
+    if (this.grounded && !this.jumped && this.direction !== "down"){
+      this.yVelocity = 0;
+    }
+    if (this.y <= this.momoBottom()) {
+      /// momo falls down
+      this.y += this.yVelocity
+      // if momo tries to go lower than floor, stop her at floor. wipe her "jumped" state
+      if (this.y >= this.momoBottom()){
+        this.y = this.momoBottom();
+        this.jumped = false;
         this.yVelocity = 0;
+        // this.grounded = true;
       }
-      if (this.y <= this.momoBottom()) {
-        /// momo falls down
-        this.y += this.yVelocity
-        
-        // if momo tries to go lower than floor, stop her at floor. wipe her "jumped" state
-        if (this.y >= this.momoBottom()){
-          this.y = this.momoBottom();
-          this.jumped = false;
-          this.yVelocity = 0;
-          // this.grounded = true;
-        }
-      } 
-      console.log(this.yVelocity)
+    } 
   }
   
   // updates X position (horizontal across board)
@@ -162,13 +157,11 @@ export default class Momo {
   //// if moving, apply friction until 1) vel is 0 OR 2) momo move backwards OR 3)jumping
   //// friction here is a positive number (2)
   calcXPos(){
-
     //// if momo is not still
     if (this.xVelocity !== 0){
       //// update her x position by her velocity (left will be negative, right is positive)
       this.x += this.xVelocity;
       //// if she is falling 
-      // if (this.yVelocity === 12) {       ////this was the old logic to say she's on the ground
       if (this.jumped === false) {
         //// if she was in the middle of moving right while falling
         if (this.xVelocity > 0){
@@ -198,14 +191,11 @@ export default class Momo {
         this.xVelocity = 0;
       }
     } 
-    
 
   }
 
-
   jump(){
-      // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
-    // this.direction = "up";
+    // if momo is on the ground, then set velocity to jump speed (which is negative, which updates y-pos to be going up)
     if (this.grounded){
       this.jumped = true;
       this.grounded = false;
@@ -233,98 +223,57 @@ export default class Momo {
   }
 
   moveDown(){
-    // this.direction = "down";
-    //// if 
-    if (this.y < (this.momoBottom())){
+    //// if momo is above ground
+    if (((this.y + this.height) < (this.momoBottom())) && this.grounded){
       /// need to this this part once I make platforms
-      this.yVelocity = -CONSTANTS.JUMP_SPEED;
+      this.yVelocity = CONSTANTS.GRAVITY;
+      this.direction = "down";
+      this.grounded = false;
     // } else if (this.y + this.height >= CONSTANTS.GROUND){
     //   this.y = this.momoBottom();
     };
   }
 
-   
 
   collide(obj){
-      // collision
       //// if the object is "collidable" from their object attribute "obj.collision" (boolean)
-      if (obj.collision === true) {
-        //// this is down collision
-        if (!this.grounded &&
-            //// if momo's left corner is to the left of the object length AND
-            this.x < obj.x + obj.width &&
-            //// momo's right corner overlaps/goes beyond object left corner
-            this.x + this.width > obj.x &&  
-            //// momo is higher than object 
-            this.y < obj.y + obj.height &&
-            //// momo's feet is lower than object left corner
-            this.y + this.height > obj.y){
-              console.log("yvel", this.yVelocity);
-            
-            //// stop momo when she hits the platform from above  
-            if (this.yVelocity >= 0){
-              this.yVelocity = 0;
-              console.log("top collided");
-              this.grounded = true;
-              this.jumped = false;
-              // this.y = obj.y - momoImage.height - 1;
-            } else if (this.yVelocity < 0 && this.yVelocity >= CONSTANTS.JUMP_SPEED + 4) {
-              console.log("bottom collide", this.y, "this.y", obj.y + obj.height + 1 )
-              this.yVelocity = 2;
-              this.grounded = false;
-              this.jumped = false;
-              this.y = obj.y + obj.height + 1;
-            }
-            
-          //// once momo collides, ground her.
-          
-          //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
-          //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
-          //// the jump can register
-          
-          return true;
-        // } else if (!this.grounded &&
-        //   //// if momo's left corner is to the left of the object length AND
-        //   this.x < obj.x + obj.width &&
-        //   //// momo's right corner overlaps/goes beyond object left corner
-        //   this.x + this.width > obj.x &&  
-        //   //// momo head is higher than bottom of object 
-        //   this.y < obj.y + obj.height  &&
-        //   //// momo's butt is higher than object left corner
-        //   this.y + this.height > obj.y + obj.height){
-        //     console.log("bottom collided")
-        //   if (this.yVelocity < 0){
-        //       this.yVelocity = 2;
-        //   }  
-
-        } else {
+    if (obj.collision === true) {
+      //// this below is a collision
+      if (!this.grounded &&
+        //// if momo's left corner is to the left of the object length AND
+        this.x < obj.x + obj.width &&
+        //// momo's right corner overlaps/goes beyond object left corner
+        this.x + this.width > obj.x &&  
+        //// momo is higher than object 
+        this.y < obj.y + obj.height &&
+        //// momo's feet is lower than object left corner
+        this.y + this.height > obj.y){
+        //// stop momo when she hits the platform from above (top collision). once momo collides, ground her.
+        if (this.yVelocity >= 0 && this.direction !== "down"){
+          this.yVelocity = 0;
+          this.grounded = true;
+          this.jumped = false;
+        //// this section is bottom collision
+        //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
+        //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
+        //// the jump can register
+        } else if (this.yVelocity < 0 && this.yVelocity >= CONSTANTS.JUMP_SPEED + 4) {
+          this.yVelocity = 2;
           this.grounded = false;
-          return false;
+          this.jumped = false;
+          this.y = obj.y + obj.height + 1;
         }
-      // } else {
-      //   // no collision
-      // }
+        return true;
+      //// below else means no collision
+      } else {
+        this.grounded = false;
+        return false;
       }
+     
+    }
   }
-          //// this bottom part isn't working
-        // } else if (!this.grounded &&
-        //   //// if momo's left corner is to the left of the object length AND
-        //   this.x < obj.x + obj.width &&
-        //   //// momo's right corner overlaps/goes beyond object left corner
-        //   this.x + this.width > obj.x &&  
-        //   //// momo is lower than object 
-        //   this.y > obj.y + obj.height &&
-        //   //// momo's heade is higher than object left corner
-        //   this.y + this.height < obj.y) {
-        //     console.log("top collision")
-        //     if (this.yVelocity < 0){
-        //       this.yVelocity = 12;
-        //       this.grounded = false;
-        //       this.jumped = false;
-        //     }
   
-  
-  //// this is momo's true ground since she has height and we don't want her to sink below ground
+  //// this is momo's true ground or "floor" since she has height and we don't want her to sink below ground
   //// momo bottom will change if you change her height so just use the standing sprite height
   momoBottom(){
     return CONSTANTS.GROUND - (walkspriteHeight * sizeModifier);

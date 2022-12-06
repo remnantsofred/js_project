@@ -4,15 +4,19 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../index";
 
 
 export const level1Background = new Image();
-level1Background.src = "./src/assets/backgrounds/kitchen_simple.png"
+level1Background.src = "./src/assets/backgrounds/kitchen_simplev2.png"
 export const level2Background = new Image();
-level2Background.src = "./src/assets/backgrounds/livingroom.png"
+level2Background.src = "./src/assets/backgrounds/livingroom_updatedv4novase.png"
 
 
   ////  MINI GAME LOGIC (LEVEL)
   //// 1. title (and subtitle if applicable)
   //// 2. load background 
   //// 3. win condition
+
+  //// if you reach the intended flatform - done
+  //// designate object winning object - done
+  //// add collision winning platform in the game - done
 
 export default class Level {
   
@@ -28,20 +32,12 @@ export default class Level {
   drawBackground(ctx) {
     ctx.fillStyle = "whitesmoke";
     if (this.background === level1Background){
-      ctx.drawImage(this.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75);
+      ctx.drawImage(this.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     } else if (this.background === level2Background){
       //// need to customize the settings for level2Background here
-      ctx.drawImage(this.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75);
+      ctx.drawImage(this.background, 0, 0, 1180, 885, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     } 
   }
-
-  //// forbidden furniture logic 
-
-  //// v1 - kitchen_simple (target = fridge)
-  
-  //// v2 - livingroom (target = curtain rod)
-
-
 
   drawTitle(ctx){
     ctx.font = '24px serif';
@@ -50,14 +46,22 @@ export default class Level {
     ctx.font = '18px serif';
     ctx.fillText(this.subtitle, 270, 120);
   }
+  
+  drawWinStatement(ctx){
+    ctx.font = '24px serif';
+    ctx.fillStyle = "#daa520";
+    ctx.fillText("You win!", 106, 80);
+  }
+  
+  drawLoseStatement(ctx){
+    ctx.font = '24px serif';
+    ctx.fillStyle = "#daa520";
+    ctx.fillText("You Lose! :(", 106, 80);
+  }
+  //// forbidden furniture logic 
 
-
-  //// if you reach the intended flatform
-
-  //// designate object winning object 
-
-  //// add collision winning platform in the game?
-
+  //// v1 - kitchen_simple (target = fridge)
+  //// v2 - livingroom (target = curtain rod)
 
   //// ambush ashy
 
@@ -69,9 +73,6 @@ export default class Level {
 
 
   //// lose animation
-
-
-
 
 
 

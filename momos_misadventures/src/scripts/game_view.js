@@ -27,7 +27,6 @@ export default class GameView {
   //// splash screen/animation for loss
  
 
-  //// draw the canvas? 
 
   //// buttons to start game OR gamestart on click inside canvas?
 

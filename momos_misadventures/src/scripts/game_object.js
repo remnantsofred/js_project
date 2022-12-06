@@ -34,7 +34,12 @@ export default class GameObject {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
-
+  
+  drawPlatform(ctx){
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+  
   
   //// animate
 
