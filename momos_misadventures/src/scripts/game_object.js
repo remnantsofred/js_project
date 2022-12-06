@@ -5,17 +5,6 @@
 //// static objects: platforms, ground
 //// moving objects: momo, ash, (daphne?), fly
 
-// const platform = {
-//   canvasWidth: 800,
-//   canvasHeight: 600,
-//   // ctx: ctx,
-//   x: 134,
-//   y: 179,
-//   width: 150,
-//   height: 25,
-// }
-// const c = document.getElementById("gamescreen").getContext("2d");
-
 
 export default class GameObject {
 
@@ -38,27 +27,6 @@ export default class GameObject {
     this.target = target;
   }
 
-
-  // //// collide --> moved this to momo class for now
-  // collide(obj1, obj2){
-  //   if (obj1.x > obj2.x + obj2width ||
-  //       obj1.x + obj1.width < obj2.x ||  
-  //       obj1.y > obj2.y + obj2.height ||
-  //       obj1.y + obj1.height < obj2.y
-  //   ) {
-  //     // no collision detected
-  //     return false;
-  //   } else {
-  //     //  collision
-  //     if(obj1.xVelocity > 0){
-  //       obj1.xVelocity = 0;
-  //       obj1.
-  //     } else if (){
-
-  //     };
-  //   }
-  
-  // }
 
 
   //// draw

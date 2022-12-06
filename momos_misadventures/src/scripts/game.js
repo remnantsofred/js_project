@@ -21,6 +21,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
 
 
 export default class Game {
+
   constructor(canvas) {
     this.ctx = canvas.getContext("2d");
     this.dimensions = { width: CANVAS_WIDTH, height: CANVAS_HEIGHT };
@@ -70,36 +71,58 @@ export default class Game {
       new Level('Kill the fly!', '', level2Background, 6, level3Objects, fly),
     ];
 
+    this.prevlevel = null;
     this.level = this.randomSelectLevel();
     this.objects = this.level.objects;
+    this.winCounter = 0;
+    this.wonMiniGame = false;
+    this.lostGame = false;
+    this.timeremaining = this.level.maxtime;
     this.play();
+    /// do I need a running toggle?
+    // this.running = false;
   }
     
-    
-    
-  play(){
-    // this.running = true;
-    this.draw();
-    this.addEventListeners();
-    
-    // TO ADD: cycle thru all objects & draw each
-  }
-  
+  //// random level select logic: (is this problematic beacuse when we restart the old array is restarted?)
+  //// if this.prevlevel is null, then select first level
+  //// else if this.prevlevel is this.levels[0], then return this.levels[1]
+  //// else if this.prevlevel is this.levels[1], then return this.levels[2]
+  //// else if this.prevlevel is this.levels[2], then return this.levels[3]
+  //// else if this.prevlevel is this.levels[3], then shuffle array and return this.levels[0]
   randomSelectLevel(){
     //// return a random level from this.levels (plural);
-    return this.levels[0];
-    /// shuffle arrays
+
+    if (!this.prevlevel) {
+      return this.levels[0];
+      
+      // console.log(this.prevlevel)
+    // } else if (){
+      
+    // } else if (){
+      
+    // } else if (){
+      
+    // } else if (){
+    //   this.shuffleLevelArray();
+    } else 
+    return this.levels[1];
+
+
+  }
+
+  shuffleLevelArray(){
+
   }
   
-  //// old code was click to jump. leaving here for a second
-  // click(){
-    //   this.momo.jump();
-    // }
-    
+  play(){
+    this.draw();
+    this.addEventListeners();
+  }
+ 
+  //// if adding event listeners to canvas, need to pass in bound callback
   addEventListeners(){
     window.addEventListener("keydown", this.keydownEvents.bind(this))
-      //// if adding event listeners to canvas, need to pass in bound callback
-  // this.canvas.addEventListener("mousedown", this.click.bind(this));
+    // a canvas example: this.canvas.addEventListener("mousedown", this.click.bind(this));
   }
   
   /// maybe change momo to run regardless because jumping is better
@@ -128,65 +151,93 @@ export default class Game {
     // else if (e.key === ' ' || e.key === "Spacebar"){
       // };
       /// ^ to do later: add action key for spacebar
-      ;
+      
     };
     
     
-    //// draw
-    //// for now add background directly in game objects no collision
-    //// but later have it draw the background first then momo and the objects
-    //// because the game should cycle through mini game so each mini game should have a background image, etc
     
   draw(){
-    this.ctx.clearRect(0,0,800,800);
-    ////  this.ctx.drawImage(momo, frameX * spriteWidth, 0, spriteWidth, spriteHeight, 50, 450, spriteWidth, spriteHeight);
-    this.level.drawBackground(this.ctx);  
-    this.level.drawTitle(this.ctx);
-    
-    // this.ctx.fillText('Get on the highest piece of furniture!', 270, 120);
-    
-    
-    for(const obj of this.objects){
+    this.ctx.clearRect(0,0,800,800);         /// clear the canvas
+    this.level.drawBackground(this.ctx);     /// draw the level's background
+    this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
+    this.wonMiniGame = false;
+    for(const obj of this.objects){          //// iterate through this level's obejcts and check collision
       if (this.momo.collide(obj)){
         if (obj.target === true) {
-          console.log("You win!")
-          //// in the future, call winGame here? or winMiniGame?
-          this.winMiniGame();
+          console.log(this.winCounter)
+          this.winCounter += 1;
+          if (this.winCounter > 11){
+            this.wonMiniGame = true;
+          }
         }       
         break;
       };
     };
     
-    for(const obj of this.objects){
+    for(const obj of this.objects){         //// iterate through this level's obejcts and draw them
       obj.drawObject(this.ctx);
     };
+
     this.momo.drawMomo(this.ctx);
-    
-    requestAnimationFrame(this.draw.bind(this));
+    this.ctx.font = '22px serif';
+    this.ctx.fillStyle = "#daa520";
+    this.ctx.fillText('Score:', 657, 75);
+    this.ctx.fillText(this.score.toString(), 735, 75);          //// draw score
+    this.ctx.fillText('Time left:', 626, 100);                //// draw timer countdown
+    this.ctx.fillText(this.timeremaining.toString(), 735, 100);          //// draw score
+    ///// draw time left here
+    let id = requestAnimationFrame(this.draw.bind(this));
+    this.timeremaining -= 0.01;
+    if (this.timeremaining <= 0){
+      this.lostGame = true;
+      cancelAnimationFrame(id);
+      this.loseGame();
+      console.log(this.lostGame);
+    }
+    if (this.wonMiniGame){
+      cancelAnimationFrame(id);
+      this.winMiniGame();
+    };
   }
   
-  
-  //// score -> update this.score when you beat a mini-game
-  //// 
-  
-  
-  
-  
-  //// resetScore
-  
+
   //// pause
+
   
-  //// win?
   
-  //// lose?
-  
-  //// next game
-  winMiniGame(){
-    console.log("winMiniGame hit - you win!")
-    this.score += 1;
-    //// play win animation, move to next game, update count, play a victory sound
-    /// 
+  //// lose? when timer runs out. where do I decriment time? 
+  //// resetScore
+  loseGame(){
+    /// splash for you lose! sad momo sound
+    this.resetGame();
   }
+
+
+  resetGame(){
+    this.prevlevel = this.level;      //// save current level as prev level
+    this.winCounter = 0;              //// reset win counter
+    if (this.wonMiniGame){
+      this.score += 1;                //// increment score if won
+      this.winMiniGame = false;
+    } else {
+      this.score = 0;                 //// wipe score if lost
+    }
+    this.level = this.randomSelectLevel();         //// select a new level
+    this.timeremaining = this.level.maxtime;
+    this.momo.reset();
+    this.draw();
+  }
+
+
+  //// play win animation, move to next game, update count, play a victory sound
+  winMiniGame(){
+    //// show win statement 
+    //// play win sound
+    //// splash for you won!
+    this.resetGame();               //// restart game 
+  }
+
+  
   
   //// handle Collisions
   handleCollisions(){

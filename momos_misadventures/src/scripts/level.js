@@ -9,15 +9,13 @@ export const level2Background = new Image();
 level2Background.src = "./src/assets/backgrounds/livingroom.png"
 
 
+  ////  MINI GAME LOGIC (LEVEL)
+  //// 1. title (and subtitle if applicable)
+  //// 2. load background 
+  //// 3. win condition
 
 export default class Level {
   
-  //// current version of constructor that game is using. need to update to below
-  // constructor(dimensions) {
-  //   this.dimensions = dimensions;
-  // }
-  
-  //// constructor - will replace current one
   constructor(title, subtitle, background, maxtime, objects, target) {
     this.title = title;
     this.subtitle = subtitle;
@@ -31,37 +29,20 @@ export default class Level {
     ctx.fillStyle = "whitesmoke";
     if (this.background === level1Background){
       ctx.drawImage(this.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75);
-    }
+    } else if (this.background === level2Background){
+      //// need to customize the settings for level2Background here
+      ctx.drawImage(this.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75);
+    } 
   }
-
-  //// 
-
 
   //// forbidden furniture logic 
 
   //// v1 - kitchen_simple (target = fridge)
-  // this.ctx.drawImage(background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75);
-
-  // const background = new Image();
-  // background.src = "./src/assets/backgrounds/kitchen_simple.png"
-  //// platforms (4):
-  //// // GameObject constructor(ctx, x, y, width, height, color, collision, bounce)
-  ////  const fridge = new GameObject(this.ctx, 56, 110, 143, 1, "#FFffff", true, false)
-  ////   const sinkLevel = new GameObject(this.ctx, 209, 346, 538, 1, "#FFffff", true, false)
-  ////   const leftShelf = new GameObject(this.ctx, 404, 227, 140, 1, "#FFffff", true, false)
-  ////   const rightShelf = new GameObject(this.ctx, 579, 173, 140, 1, "#FFffff", true, false)
-  //// 
-  //// 
   
   //// v2 - livingroom (target = curtain rod)
-  ////  MINI GAME LOGIC
-  //// 1. title
-  //// 2. load background 
-  //// 3. placement of platform 
-  //// 4. 
-  //// 
 
-  // this.level.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT + 75
+
+
   drawTitle(ctx){
     ctx.font = '24px serif';
     console.log(this.title);
@@ -69,13 +50,8 @@ export default class Level {
     ctx.fillText(this.title, 306, 80);
     ctx.font = '18px serif';
     ctx.fillText(this.subtitle, 270, 120);
-   
   }
 
-  //// constructor(dimensions, id, title, background, subtitle, target)
-  // createRandomLevel(){
-  //   return new Level({width: CANVAS_WIDTH, height: CANVAS_HEIGHT})
-  // }
 
   //// if you reach the intended flatform
 
@@ -84,16 +60,10 @@ export default class Level {
   //// add collision winning platform in the game?
 
 
-
   //// ambush ashy
 
 
-
   //// kill the fly
-
-
-
-  //// 
 
 
   //// win animation
@@ -102,7 +72,6 @@ export default class Level {
   //// lose animation
 
 
-  //// 
 
 
 

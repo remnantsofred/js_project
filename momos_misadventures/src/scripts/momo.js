@@ -47,20 +47,23 @@ export default class Momo {
   constructor(canvasWidth, canvasHeight, bounce) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
-    this.width = walkspriteWidth * sizeModifier; 
-    this.height = walkspriteHeight * sizeModifier;
-    this.x = canvasWidth / 8;
-    this.y = this.momoBottom();
-    this.yVelocity = 0;
-    this.xVelocity = 0;
     this.calcXPos.bind(this);
     this.calcYPos.bind(this);
     this.jump.bind(this);
+    this.reset();
+  }
+
+  reset(){
+    this.width = walkspriteWidth * sizeModifier; 
+    this.height = walkspriteHeight * sizeModifier;
+    this.x = this.canvasWidth / 8;
+    this.y = this.momoBottom();
+    this.yVelocity = 0;
+    this.xVelocity = 0;
     this.direction = null;
     this.jumped = false;
     this.grounded = true;
   }
-
 
   drawMomo(ctx){
     let prevPos = this.y;
