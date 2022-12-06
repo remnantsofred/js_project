@@ -73,7 +73,6 @@ export default class Game {
 
     this.prevlevel = null;
     this.level = this.randomSelectLevel();
-    this.objects = this.level.objects;
     this.winCounter = 0;
     this.wonMiniGame = false;
     this.lostGame = false;
@@ -161,7 +160,7 @@ export default class Game {
     this.level.drawBackground(this.ctx);     /// draw the level's background
     this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
     this.wonMiniGame = false;
-    for(const obj of this.objects){          //// iterate through this level's obejcts and check collision
+    for(const obj of this.level.objects){          //// iterate through this level's obejcts and check collision
       if (this.momo.collide(obj)){
         if (obj.target === true) {
           console.log(this.winCounter)
@@ -174,7 +173,7 @@ export default class Game {
       };
     };
     
-    for(const obj of this.objects){         //// iterate through this level's obejcts and draw them
+    for(const obj of this.level.objects){         //// iterate through this level's obejcts and draw them
       obj.drawObject(this.ctx);
     };
 
@@ -188,12 +187,12 @@ export default class Game {
     ///// draw time left here
     let id = requestAnimationFrame(this.draw.bind(this));
     this.timeremaining -= 0.01;
-    if (this.timeremaining <= 0){
-      this.lostGame = true;
-      cancelAnimationFrame(id);
-      this.loseGame();
-      console.log(this.lostGame);
-    }
+    // if (this.timeremaining <= 0){
+    //   this.lostGame = true;
+    //   cancelAnimationFrame(id);
+    //   this.loseGame();
+    //   console.log(this.lostGame);
+    // }
     if (this.wonMiniGame){
       cancelAnimationFrame(id);
       this.winMiniGame();

@@ -152,7 +152,7 @@ export default class Momo {
           // this.grounded = true;
         }
       } 
-
+      console.log(this.yVelocity)
   }
   
   // updates X position (horizontal across board)
@@ -259,20 +259,44 @@ export default class Momo {
             this.y < obj.y + obj.height &&
             //// momo's feet is lower than object left corner
             this.y + this.height > obj.y){
-          
-          if (this.yVelocity > 0){
-            this.yVelocity = 0;
-          }
+              console.log("yvel", this.yVelocity);
+            
+            //// stop momo when she hits the platform from above  
+            if (this.yVelocity >= 0){
+              this.yVelocity = 0;
+              console.log("top collided");
+              this.grounded = true;
+              this.jumped = false;
+              // this.y = obj.y - momoImage.height - 1;
+            } else if (this.yVelocity < 0 && this.yVelocity >= CONSTANTS.JUMP_SPEED + 4) {
+              console.log("bottom collide", this.y, "this.y", obj.y + obj.height + 1 )
+              this.yVelocity = 2;
+              this.grounded = false;
+              this.jumped = false;
+              this.y = obj.y + obj.height + 1;
+            }
+            
           //// once momo collides, ground her.
-          this.grounded = true;
           
           //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
           //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
           //// the jump can register
-          if (this.yVelocity !== CONSTANTS.JUMP_SPEED){
-            this.jumped = false;
-          }
+          
           return true;
+        // } else if (!this.grounded &&
+        //   //// if momo's left corner is to the left of the object length AND
+        //   this.x < obj.x + obj.width &&
+        //   //// momo's right corner overlaps/goes beyond object left corner
+        //   this.x + this.width > obj.x &&  
+        //   //// momo head is higher than bottom of object 
+        //   this.y < obj.y + obj.height  &&
+        //   //// momo's butt is higher than object left corner
+        //   this.y + this.height > obj.y + obj.height){
+        //     console.log("bottom collided")
+        //   if (this.yVelocity < 0){
+        //       this.yVelocity = 2;
+        //   }  
+
         } else {
           this.grounded = false;
           return false;

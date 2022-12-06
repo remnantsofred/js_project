@@ -45,7 +45,6 @@ export default class Level {
 
   drawTitle(ctx){
     ctx.font = '24px serif';
-    console.log(this.title);
     ctx.fillStyle = "#daa520";
     ctx.fillText(this.title, 306, 80);
     ctx.font = '18px serif';
