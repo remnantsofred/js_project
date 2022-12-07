@@ -1,5 +1,5 @@
 import Momo, { CONSTANTS } from './momo';
-import Level, { level1Background, level2Background} from './level'
+import Level, { level1Background, level2Background, level4Background} from './level'
 import GameObject from './game_object';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
 
@@ -12,7 +12,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
 //// logic to start a minigame and continue to next one if win (and update score) (random)
 //// go back to main screen on loss 
 
-//// new level constructor(title, subtitle, background, maxtime, objects, gravityModifier, target) 
+//// new level constructor(id, title, subtitle, background, maxtime, objects, gravityModifier, target) 
 // const level1 = new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level1Background, 6, level1Objects, fridge);
 // const level2 = new Level('Ambush Ashy!', '', level2Background, 6, level2Objects, ashy);
 // const level3 = new Level('Kill the fly!', '', level2Background, 6, level3Objects, fly);
@@ -36,19 +36,22 @@ export default class Game {
     const firstObjectHidden = new GameObject(this.ctx, 0, 800, 0, 0, "#000000", true, false, false); 
     //// ground, then firstObjectHidden must go in each levelObjects array
     const fridge = new GameObject(this.ctx, 58, 158, 135, 5, "#7cfd21", true, false, true);
-    const sinkLevel = new GameObject(this.ctx, 208, 364, 340, 5, "#7cfd21", true, false, false);
-    const leftShelf = new GameObject(this.ctx, 450, 203, 120, 5, "#7cfd21", true, false, false);
+    const sinkLevel = new GameObject(this.ctx, 208, 364, 340, 5, "#fde321", true, false, false);
+    const leftShelf = new GameObject(this.ctx, 450, 203, 120, 5, "#fde321", true, false, false);
     // const rightShelf = new GameObject(this.ctx, 579, 173, 140, 5, "#7cfd21", true, false, false);
     //// level 4 objects
     const curtainrod = new GameObject(this.ctx, 265, 160, 165, 5, "#7cfd21", true, false, true);
     // const couchCushion = new GameObject(this.ctx, 92, 431, 280, 5, "#7cfd21", true, false, false);
-    const couchCushion = new GameObject(this.ctx, 290, 430, 90, 5, "#7cfd21", true, false, false);
-    const couchTop = new GameObject(this.ctx, 80, 360, 160, 5, "#7cfd21", true, false, false);
+    const couchCushion = new GameObject(this.ctx, 290, 430, 90, 5, "#fde321", true, false, false);
+    const couchTop = new GameObject(this.ctx, 80, 360, 160, 5, "#fde321", true, false, false);
     // const tvConsole = new GameObject(this.ctx, 478, 416, 276, 5, "#7cfd21", true, false, false);
-    const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#7cfd21", true, false, false);
+    const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#fde321", true, false, false);
     //// need to fix Ashy later
-    const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
-    const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
+    // const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
+    this.Ashy = new Momo(this.dimensions.width, this.dimensions.height);
+    const fauxshelf = new GameObject(this.ctx, 235, 280, 200, 5, "#7cfd21", false, false, false);
+    const hiddenledge = new GameObject(this.ctx, 235, 200, 200, 5, "#fd2184", true, false, false);
+    const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
     // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
 
@@ -61,10 +64,13 @@ export default class Game {
       // leftShelf,
       // rightShelf
     ];
-    //// ambush ashy (living room)  
+    //// ambush ashy (kitchen)  
     const level2Objects = [
       ground,
-      firstObjectHidden
+      firstObjectHidden,
+      // fauxshelf,
+      hiddenledge
+      // this.Ashy,
       
     ];
     //// kill the fly (living room)  
@@ -86,23 +92,23 @@ export default class Game {
     ];
 
     this.levels = [ 
-      new Level('CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
-      new Level('AMBUSH', '', level2Background, 10, level2Objects, 1, Ashy),
-      new Level('KILL', '', level2Background, 10, level3Objects, 1, fly),
-      new Level('CLIMB', '', level2Background, 10, level4Objects, 1, curtainrod),
-      // new Level('ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
+      new Level(1, 'CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
+      new Level(2, 'AMBUSH', '', level2Background, 10, level2Objects, 1, this.Ashy),
+      new Level(3, 'KILL', '', level4Background, 10, level3Objects, 1, fly),
+      new Level(4, 'CLIMB', '', level4Background, 10, level4Objects, 1, curtainrod),
+      // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
 
     this.prevlevel = null;
     // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
-    this.level = this.levels[0];
+    // this.level = this.levels[2];
     this.winCounter = 0;
     this.wonMiniGame = false;
     this.lostGame = false;
-    this.timeremaining = this.level.maxtime;
     this.score = 0;
     this.running = false;
     this.play();
+    this.resetGame();
 
   }
 
@@ -110,34 +116,34 @@ export default class Game {
   //// return a random level from this.levels (plural);
   //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
-    // if (!this.prevlevel) {
-    //   return this.levels[0];
-    // } else if (this.prevlevel === this.levels[0]){
-    //   return this.levels[1];
-    // } else if (this.prevlevel === this.levels[1]){
-    //   return this.levels[2];
-    // } else if (this.prevlevel === this.levels[2]){
-    //   return this.levels[3];
-    // } else if (this.prevlevel === this.levels[3]){
-    //   this.shuffleLevelArray();
-    //   return this.levels[0];
-    // }
-
-    //// testing level4
-    if (this.prevlevel === this.levels[0]){
-      return this.levels[3];    
-    } else {
-      return this.levels[0];   
+    if (!this.prevlevel) {
+      return this.levels[0];
+    } else if (this.prevlevel === this.levels[0]){
+      return this.levels[1];
+    } else if (this.prevlevel === this.levels[1]){
+      return this.levels[2];
+    } else if (this.prevlevel === this.levels[2]){
+      return this.levels[3];
+    } else if (this.prevlevel === this.levels[3]){
+      this.shuffleLevelArray();
+      return this.levels[0];
     }
+
+    // //// testing level4
+    // if (this.prevlevel === this.levels[2]){
+    //   return this.levels[2];    
+    // } else {
+    //   return this.levels[2];   
+    // }
   }
 
   shuffleLevelArray(){
-    this.levels = this.levels.sort(() => Math.random() - 0.5);
+    let shuffled = this.levels.sort(() => Math.random() - 0.5);
+    this.levels = shuffled;
   }
   
   play(){
     this.running = true;
-    this.draw();
     this.addEventListeners();
   }
  
@@ -194,8 +200,16 @@ export default class Game {
         obj.drawObject(this.ctx);
       };
 
+
       this.momo.drawMomo(this.ctx);
-      this.ctx.font = '22px serif';
+      console.log(this.momo.yVelocity + "yvelocity");
+
+      if (this.level.title === "AMBUSH"){
+        this.Ashy.drawMomo(this.ctx);
+      } 
+
+
+      this.ctx.font = '22px sans-serif';
       this.ctx.fillStyle = "#daa520";
       this.ctx.fillText('Score:', 657, 75);
       this.ctx.fillText(this.score.toString(), 735, 75);          //// draw score
@@ -203,6 +217,8 @@ export default class Game {
       this.ctx.fillText(this.timeremaining.toString(), 735, 100);          //// draw score
       ///// draw time left here
       let id = requestAnimationFrame(this.draw.bind(this));
+
+
       this.timeremaining -= 0.02;
       if (this.timeremaining <= 0){                 //// this is something wrong with this. 
         this.lostGame = true;                       //// can't read this.level.maxtime;
@@ -214,7 +230,7 @@ export default class Game {
         this.winMiniGame();
       };
     } else {
-      this.ctx.font = '50px serif';
+      this.ctx.font = '50px sans-serif';
       this.ctx.fillStyle = "#daa520";
       this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
     }
@@ -247,7 +263,7 @@ export default class Game {
     this.winCounter = 0;              //// reset win counter
     if (this.wonMiniGame){
       this.score += 1;                //// increment score if won
-      this.winMiniGame = false;
+      this.wonMiniGame = false;
     } else {
       this.score = 0;                 //// wipe score if lost
       this.lostGame = false;
@@ -255,6 +271,13 @@ export default class Game {
     this.level = this.randomSelectLevel();         //// select a new level
     this.timeremaining = this.level.maxtime;
     this.momo.reset();
+    if (this.level.title === "AMBUSH"){
+      this.momo.level = "AMBUSH";
+      this.momo.upsidedown = true;
+      this.momo.changeStartingPos(235, 115);
+      this.Ashy.drawMomo(this.ctx);
+    } 
+    
     this.draw();
   }
 
@@ -268,7 +291,11 @@ export default class Game {
     this.resetGame();               //// restart game 
   }
 
+  automatedAshyMove(){
+    this.Ashy;
 
+
+  }
   
   
 }
