@@ -93,6 +93,7 @@ export default class Momo {
     this.direction = null;
     this.jumped = false;
     this.grounded = true;
+    this.upsidedown = false;
   }
 
   draw(ctx, ash){
@@ -202,7 +203,7 @@ export default class Momo {
         
         gameFrame++
       } else if (this.jumped === false && this.xVelocity < 0 && this.direction === "left"){
-          ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+          ctx.drawImage(ashyLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
           this.width = walkspriteWidth * sizeModifier;
           this.height = walkspriteHeight * sizeModifier;
           if (gameFrame % staggerFrames == 0){
@@ -213,7 +214,7 @@ export default class Momo {
         gameFrame++
 
       } else {
-        ctx.drawImage(momoImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+        ctx.drawImage(ashyImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
         this.width = walkspriteWidth * sizeModifier;
         this.height = walkspriteHeight * sizeModifier;
       }
@@ -252,39 +253,43 @@ export default class Momo {
   //// friction here is a positive number (2)
   calcXPos(){
     //// if momo is not still
-    if (this.xVelocity !== 0){
-      //// update her x position by her velocity (left will be negative, right is positive)
-      this.x += this.xVelocity;
-      //// if she is falling 
-      if (this.jumped === false) {
-        //// if she was in the middle of moving right while falling
-        if (this.xVelocity > 0){
-          //// apply friction against her movement
-          this.xVelocity -= CONSTANTS.FRICTION;
-          //// but stop her from flipping backwards (so friction can't overtake her)
-          if(this.xVelocity < 0){
-            this.xVelocity = 0;
-          }
-        //// if she was in the middle of moving left while fallling 
-        } else {
-          //// apply friction against her movement
-          this.xVelocity += CONSTANTS.FRICTION;
-          //// but stop her from flipping forwards (so friction can't overtake her)
-          if(this.xVelocity > 0){
-            this.xVelocity = 0;
+    if (!this.ash){  
+      if (this.xVelocity !== 0){
+        //// update her x position by her velocity (left will be negative, right is positive)
+        this.x += this.xVelocity;
+        //// if she is falling 
+        if (this.jumped === false) {
+          //// if she was in the middle of moving right while falling
+          if (this.xVelocity > 0){
+            //// apply friction against her movement
+            this.xVelocity -= CONSTANTS.FRICTION;
+            //// but stop her from flipping backwards (so friction can't overtake her)
+            if(this.xVelocity < 0){
+              this.xVelocity = 0;
+            }
+          //// if she was in the middle of moving left while fallling 
+          } else {
+            //// apply friction against her movement
+            this.xVelocity += CONSTANTS.FRICTION;
+            //// but stop her from flipping forwards (so friction can't overtake her)
+            if(this.xVelocity > 0){
+              this.xVelocity = 0;
+            }
           }
         }
-      }
-      // so momo can't walk past canvas wall
-      if (this.x <= 0){
-        this.x = 0;
-        this.xVelocity = 0;
-      }
-      if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
-        this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
-        this.xVelocity = 0;
-      }
-    } 
+        // so momo can't walk past canvas wall
+        if (this.x <= 0){
+          this.x = 0;
+          this.xVelocity = 0;
+        }
+        if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+          this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
+          this.xVelocity = 0;
+        }
+      } 
+    } else if (this.ash){
+      this.x += this.xVelocity
+    }
 
   }
 
@@ -376,19 +381,25 @@ export default class Momo {
   }
 
   automateMovement(){
-    this.xVelocity = CONSTANTS.WALK_SPEED; 
-    this.direction = "right";
-    if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
-      this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
-      this.direction = "left";
-      this.xVelocity = -CONSTANTS.WALK_SPEED;
-    }
-    if (this.x <= 0){
-      this.x = 0;
+    if (this.direction === "right"){
       this.xVelocity = CONSTANTS.WALK_SPEED;
-      this.direction = "right";
-    }
+      if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+        // this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
+        this.direction = "left";
+        this.xVelocity = -CONSTANTS.WALK_SPEED;
+      }
+    } 
     
+    if (this.direction === "left"){
+      this.xVelocity = -CONSTANTS.WALK_SPEED;
+      if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+        this.xVelocity = -CONSTANTS.WALK_SPEED;
+      } else if (this.x <= 0){
+      // this.x = 0;
+        this.xVelocity = CONSTANTS.WALK_SPEED;
+        this.direction = "right";
+      }
+    }
   }
 
   changeStartingPos(x, y){

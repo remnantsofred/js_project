@@ -203,11 +203,14 @@ export default class Game {
       };
 
 
-      this.momo.draw(this.ctx, false);
+      this.momo.draw(this.ctx);
 
       if (this.level.title === "AMBUSH"){
+        this.Ashy.draw(this.ctx);
         this.Ashy.automateMovement();
-        this.Ashy.draw(this.ctx, true);
+        if (this.direction === "right"){
+
+        }
       } 
 
 
@@ -280,8 +283,9 @@ export default class Game {
       this.momo.level = "AMBUSH";
       this.momo.upsidedown = true;
       this.momo.changeStartingPos(300, 116);
-      this.Ashy.draw(this.ctx, true);
-      this.Ashy.automateMovement();
+      this.Ashy.direction = "right";
+      this.Ashy.xVelocity = CONSTANTS.WALK_SPEED;
+      // this.Ashy.draw(this.ctx);
     } 
     
     this.animate();
