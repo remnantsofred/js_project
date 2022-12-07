@@ -32,6 +32,11 @@ momoJumpLeft.src = "./src/assets/cats/momo_pounce_left_shortv1.png"
 const jumpspriteWidth = 133;
 const jumpspriteHeight = 156;
 
+const momoFalling = new Image();
+momoFalling.src = "./src/assets/cats/momo_falling.png"
+const fallingspriteWidth = 146;
+const fallingspriteHeight = 122;
+
 let sizeModifier = 0.75;
 let frameX = 1;
 let frameY = 0;
@@ -76,6 +81,7 @@ export default class Momo {
     }
 
     this.calcXPos();
+
     if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
       ctx.drawImage(momoImage, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
       this.width = walkspriteWidth * sizeModifier;
@@ -119,7 +125,12 @@ export default class Momo {
         } else {
           frameX = 3;
         }
-     
+    
+    } else if (this.direction === "down" && this.yVelocity !== 0){ 
+      ctx.drawImage(momoFalling, 0 * fallingspriteWidth, 0, fallingspriteWidth, fallingspriteHeight, this.x, this.y, fallingspriteWidth * sizeModifier, fallingspriteHeight * sizeModifier);
+      this.width = fallingspriteWidth * sizeModifier;
+      this.height = fallingspriteHeight * sizeModifier;
+
     } else {
       ctx.drawImage(momoImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
       this.width = walkspriteWidth * sizeModifier;

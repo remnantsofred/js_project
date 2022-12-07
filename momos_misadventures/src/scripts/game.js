@@ -12,7 +12,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
 //// logic to start a minigame and continue to next one if win (and update score) (random)
 //// go back to main screen on loss 
 
-//// new level constructor takes in (title, subtitle, background, maxtime, objects, target)
+//// new level constructor(title, subtitle, background, maxtime, objects, gravityModifier, target) 
 // const level1 = new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level1Background, 6, level1Objects, fridge);
 // const level2 = new Level('Ambush Ashy!', '', level2Background, 6, level2Objects, ashy);
 // const level3 = new Level('Kill the fly!', '', level2Background, 6, level3Objects, fly);
@@ -35,16 +35,16 @@ export default class Game {
     //// if I can't figure out why the first object collision doesn't work, set the first object as 0 and in the ground
     const firstObjectHidden = new GameObject(this.ctx, 0, 800, 0, 0, "#000000", true, false, false); 
     //// ground, then firstObjectHidden must go in each levelObjects array
-    const fridge = new GameObject(this.ctx, 56, 110, 143, 1, "#FFffffff", true, false, true);
-    const sinkLevel = new GameObject(this.ctx, 209, 346, 538, 1, "#FFffffff", true, false, false);
-    const leftShelf = new GameObject(this.ctx, 404, 227, 140, 1, "#FFffffff", true, false, false);
-    const rightShelf = new GameObject(this.ctx, 579, 173, 140, 1, "#FFffffff", true, false, false);
+    const fridge = new GameObject(this.ctx, 58, 158, 135, 5, "#7cfd21", true, false, true);
+    const sinkLevel = new GameObject(this.ctx, 208, 364, 340, 5, "#7cfd21", true, false, false);
+    const leftShelf = new GameObject(this.ctx, 450, 203, 120, 5, "#7cfd21", true, false, false);
+    // const rightShelf = new GameObject(this.ctx, 579, 173, 140, 5, "#7cfd21", true, false, false);
     //// level 4 objects
     const curtainrod = new GameObject(this.ctx, 265, 160, 165, 5, "#7cfd21", true, false, true);
     // const couchCushion = new GameObject(this.ctx, 92, 431, 280, 5, "#7cfd21", true, false, false);
     const couchCushion = new GameObject(this.ctx, 290, 430, 90, 5, "#7cfd21", true, false, false);
     const couchTop = new GameObject(this.ctx, 80, 360, 160, 5, "#7cfd21", true, false, false);
-    const tvConsole = new GameObject(this.ctx, 478, 416, 276, 5, "#7cfd21", true, false, false);
+    // const tvConsole = new GameObject(this.ctx, 478, 416, 276, 5, "#7cfd21", true, false, false);
     const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#7cfd21", true, false, false);
     //// need to fix Ashy later
     const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
@@ -58,8 +58,8 @@ export default class Game {
       firstObjectHidden,
       fridge,
       sinkLevel,
-      leftShelf,
-      rightShelf
+      // leftShelf,
+      // rightShelf
     ];
     //// ambush ashy (living room)  
     const level2Objects = [
@@ -86,15 +86,16 @@ export default class Game {
     ];
 
     this.levels = [ 
-      new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level1Background, 10, level1Objects, fridge),
-      new Level('Ambush Ashy!', '', level2Background, 10, level2Objects, Ashy),
-      new Level('Kill the fly!', '', level2Background, 10, level3Objects, fly),
-      new Level('Forbidden furniture!', 'Get on the highest piece of furniture!', level2Background, 10, level4Objects, curtainrod),
+      new Level('CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
+      new Level('AMBUSH', '', level2Background, 10, level2Objects, 1, Ashy),
+      new Level('KILL', '', level2Background, 10, level3Objects, 1, fly),
+      new Level('CLIMB', '', level2Background, 10, level4Objects, 1, curtainrod),
+      // new Level('ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
 
     this.prevlevel = null;
     // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
-    this.level = this.levels[0 ];
+    this.level = this.levels[0];
     this.winCounter = 0;
     this.wonMiniGame = false;
     this.lostGame = false;

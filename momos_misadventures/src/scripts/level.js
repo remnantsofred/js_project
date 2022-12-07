@@ -4,7 +4,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from "../index";
 
 
 export const level1Background = new Image();
-level1Background.src = "./src/assets/backgrounds/kitchen_simplev2.png"
+level1Background.src = "./src/assets/backgrounds/kitchen_simplev3.png"
 export const level2Background = new Image();
 level2Background.src = "./src/assets/backgrounds/livingroom_updatedv4novase.png"
 
@@ -20,13 +20,14 @@ level2Background.src = "./src/assets/backgrounds/livingroom_updatedv4novase.png"
 
 export default class Level {
   
-  constructor(title, subtitle, background, maxtime, objects, target) {
+  constructor(title, subtitle, background, maxtime, objects, gravityModifier, target) {
     this.title = title;
     this.subtitle = subtitle;
     this.background = background;
     this.maxtime = maxtime;
     this.objects = objects;
     this.target = target; 
+    this.gravityModifier = gravityModifier;
   }
 
   drawBackground(ctx) {
@@ -40,7 +41,7 @@ export default class Level {
   }
 
   drawTitle(ctx){
-    ctx.font = '24px serif';
+    ctx.font = '60px serif';
     ctx.fillStyle = "#daa520";
     ctx.fillText(this.title, 306, 80);
     ctx.font = '18px serif';
