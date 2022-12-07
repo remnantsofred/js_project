@@ -209,7 +209,7 @@ export default class Game {
       } 
 
 
-      this.ctx.font = '22px sans-serif';
+      this.ctx.font = '22px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
       this.ctx.fillText('Score:', 657, 75);
       this.ctx.fillText(this.score.toString(), 735, 75);          //// draw score
@@ -230,7 +230,7 @@ export default class Game {
         this.winMiniGame();
       };
     } else {
-      this.ctx.font = '50px sans-serif';
+      this.ctx.font = '50px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
       this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
     }

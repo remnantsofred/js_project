@@ -48,21 +48,22 @@ export default class Level {
   }
 
   drawTitle(ctx){
-    ctx.font = '60px sans-serif';
+    // ctx.font = '60px sans-serif';
+    ctx.font = "60px Itim, cursive"
     ctx.fillStyle = "#daa520";
     ctx.fillText(this.title, 306, 80);
-    ctx.font = '18px serif';
+    ctx.font = '18px Itim, cursive';
     ctx.fillText(this.subtitle, 270, 120);
   }
   
   drawWinStatement(ctx){
-    ctx.font = '24px sans-serif';
+    ctx.font = '24px  Itim, cursive';
     ctx.fillStyle = "#daa520";
     ctx.fillText("You win!", 106, 80);
   }
   
   drawLoseStatement(ctx){
-    ctx.font = '24px sans-serif';
+    ctx.font = '24px  Itim, cursive';
     ctx.fillStyle = "#daa520";
     ctx.fillText("You Lose! :(", 106, 80);
   }
