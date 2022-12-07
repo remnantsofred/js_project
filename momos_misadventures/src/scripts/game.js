@@ -50,7 +50,7 @@ export default class Game {
     // const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
     this.Ashy = new Momo(this.dimensions.width, this.dimensions.height);
     const fauxshelf = new GameObject(this.ctx, 235, 280, 200, 5, "#7cfd21", false, false, false);
-    const hiddenledge = new GameObject(this.ctx, 235, 200, 200, 5, "#fd2184", true, false, false);
+    const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "#fd2184", true, false, false);
     const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
     // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
@@ -202,7 +202,6 @@ export default class Game {
 
 
       this.momo.drawMomo(this.ctx);
-      console.log(this.momo.yVelocity + "yvelocity");
 
       if (this.level.title === "AMBUSH"){
         this.Ashy.drawMomo(this.ctx);
@@ -274,7 +273,7 @@ export default class Game {
     if (this.level.title === "AMBUSH"){
       this.momo.level = "AMBUSH";
       this.momo.upsidedown = true;
-      this.momo.changeStartingPos(235, 115);
+      this.momo.changeStartingPos(300, 116);
       this.Ashy.drawMomo(this.ctx);
     } 
     

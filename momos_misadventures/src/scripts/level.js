@@ -35,13 +35,14 @@ export default class Level {
 
   drawBackground(ctx) {
     ctx.fillStyle = "whitesmoke";
+    //// level1Background = climb kitchen  
     if (this.background === level1Background){
       ctx.drawImage(this.background, 0, 0, 3332, 2499, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     } else if (this.background === level2Background){
-      //// need to customize the settings for level2Background here
+      //// level2Background = ambush living room 
       ctx.drawImage(this.background, 0, 0, 1388, 1041, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     } else if (this.background === level4Background){
-      //// need to customize the settings for level2Background here
+      //// level4Background = climb living room 
       ctx.drawImage(this.background, 0, 0, 1180, 885, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     } 
 
