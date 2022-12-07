@@ -3,6 +3,27 @@
   \*********************************************************************************************************/
 /* NEED TO FIX: figure out why css reset file is overriding this one */
 
+/* 
+CSS rules to specify families
+
+font-family: 'Baloo 2', cursive;
+font-family: 'Comfortaa', cursive;
+font-family: 'Fredoka One', cursive;
+font-family: 'Gloria Hallelujah', cursive;
+font-family: 'Itim', cursive;
+font-family: 'Jua', sans-serif;
+font-family: 'Krub', sans-serif;
+font-family: 'Mali', cursive;
+font-family: 'Nerko One', cursive;
+font-family: 'Niramit', sans-serif;
+font-family: 'Nunito', sans-serif;
+font-family: 'Patrick Hand', cursive;
+font-family: 'Permanent Marker', cursive;
+font-family: 'Quicksand', sans-serif;
+font-family: 'Roboto', sans-serif;
+font-family: 'Rubik', sans-serif;
+font-family: 'Varela Round', sans-serif;
+font-family: 'Zen Maru Gothic', sans-serif; */
 
 body {
   background-color: #daa520;
