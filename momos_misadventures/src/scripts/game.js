@@ -8,7 +8,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
 //// starting a new game should entail:
 //// import /load game_view (or does new game go into game_view?) --> ask someone 
 //// creating a canvas, saving ctx
-//// loop over all opjects, draw all
+//// loop over all opjects, animate all
 //// logic to start a minigame and continue to next one if win (and update score) (random)
 //// go back to main screen on loss 
 
@@ -27,13 +27,13 @@ export default class Game {
     this.dimensions = { width: CANVAS_WIDTH, height: CANVAS_HEIGHT };
     this.canvas = canvas;
     // this momo is the real momo, okay. 
-    this.momo = new Momo(this.dimensions.width, this.dimensions.height);
+    this.momo = new Momo(this.dimensions.width, this.dimensions.height, false);
     /// use #FFffff for transparent
     /// use #7cfd21 for bright green (starting out to gauge pos)
     //// this is the ground below:
     const ground = new GameObject(this.ctx, 0, CONSTANTS.GROUND, CANVAS_WIDTH, 61, "#449903", false, false, false);  
     //// if I can't figure out why the first object collision doesn't work, set the first object as 0 and in the ground
-    const firstObjectHidden = new GameObject(this.ctx, 0, 800, 0, 0, "#000000", true, false, false); 
+    const firstObjectHidden = new GameObject(this.ctx, 0, 800, 0, 0, "#000000", true, false, false);
     //// ground, then firstObjectHidden must go in each levelObjects array
     const fridge = new GameObject(this.ctx, 58, 158, 135, 5, "#7cfd21", true, false, true);
     const sinkLevel = new GameObject(this.ctx, 208, 364, 340, 5, "#fde321", true, false, false);
@@ -48,9 +48,9 @@ export default class Game {
     const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#fde321", true, false, false);
     //// need to fix Ashy later
     // const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
-    this.Ashy = new Momo(this.dimensions.width, this.dimensions.height);
+    this.Ashy = new Momo(this.dimensions.width, this.dimensions.height, true);
     const fauxshelf = new GameObject(this.ctx, 235, 280, 200, 5, "#7cfd21", false, false, false);
-    const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "#fd2184", true, false, false);
+    const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "#FFffff", true, false, false);
     const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
     // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
@@ -90,10 +90,10 @@ export default class Game {
       tv
       
     ];
-
+    //// constructor(id, title, subtitle, background, maxtime, objects, gravityModifier, target)
     this.levels = [ 
       new Level(1, 'CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
-      new Level(2, 'AMBUSH', '', level2Background, 10, level2Objects, 1, this.Ashy),
+      new Level(2, 'AMBUSH', '', level2Background, 20, level2Objects, 1, this.Ashy),
       new Level(3, 'KILL', '', level4Background, 10, level3Objects, 1, fly),
       new Level(4, 'CLIMB', '', level4Background, 10, level4Objects, 1, curtainrod),
       // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
@@ -173,12 +173,14 @@ export default class Game {
       }
     } else if (e.key === ' ' || e.key === "Spacebar"){
         this.pauseGame();
-    };
+    } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
+        this.gameAction();
+    }
     //// ^ to do later: add action key for spacebar          
-  };
+  }
     
 
-  draw(){
+  animate(){
     if (this.running){
       this.ctx.clearRect(0,0,800,800);         /// clear the canvas
       this.level.drawBackground(this.ctx);     /// draw the level's background
@@ -197,14 +199,15 @@ export default class Game {
       };
       
       for(const obj of this.level.objects){         //// iterate through this level's obejcts and draw them
-        obj.drawObject(this.ctx);
+        obj.draw(this.ctx);
       };
 
 
-      this.momo.drawMomo(this.ctx);
+      this.momo.draw(this.ctx, false);
 
       if (this.level.title === "AMBUSH"){
-        this.Ashy.drawMomo(this.ctx);
+        this.Ashy.automateMovement();
+        this.Ashy.draw(this.ctx, true);
       } 
 
 
@@ -215,7 +218,7 @@ export default class Game {
       this.ctx.fillText('Time left:', 626, 100);                //// draw timer countdown
       this.ctx.fillText(this.timeremaining.toString(), 735, 100);          //// draw score
       ///// draw time left here
-      let id = requestAnimationFrame(this.draw.bind(this));
+      let id = requestAnimationFrame(this.animate.bind(this));
 
 
       this.timeremaining -= 0.02;
@@ -239,12 +242,15 @@ export default class Game {
   pauseGame(){
     if (!this.running){
       this.running = true;
-      this.draw();
+      this.animate();
     } else {
       this.running = false;
     }
   }
 
+  gameAction(){
+
+  }
   
   //// lose? when timer runs out. where do I decriment time? 
   //// resetScore
@@ -274,10 +280,11 @@ export default class Game {
       this.momo.level = "AMBUSH";
       this.momo.upsidedown = true;
       this.momo.changeStartingPos(300, 116);
-      this.Ashy.drawMomo(this.ctx);
+      this.Ashy.draw(this.ctx, true);
+      this.Ashy.automateMovement();
     } 
     
-    this.draw();
+    this.animate();
   }
 
 

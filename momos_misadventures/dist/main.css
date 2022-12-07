@@ -5,12 +5,15 @@
 
 /* 
 CSS rules to specify families
-
+//// first 4 are my favorites: 
+font-family: 'Itim', cursive;
+font-family: 'Quicksand', sans-serif;
 font-family: 'Baloo 2', cursive;
+font-family: 'Zen Maru Gothic', sans-serif; 
+
 font-family: 'Comfortaa', cursive;
 font-family: 'Fredoka One', cursive;
 font-family: 'Gloria Hallelujah', cursive;
-font-family: 'Itim', cursive;
 font-family: 'Jua', sans-serif;
 font-family: 'Krub', sans-serif;
 font-family: 'Mali', cursive;
@@ -19,11 +22,10 @@ font-family: 'Niramit', sans-serif;
 font-family: 'Nunito', sans-serif;
 font-family: 'Patrick Hand', cursive;
 font-family: 'Permanent Marker', cursive;
-font-family: 'Quicksand', sans-serif;
 font-family: 'Roboto', sans-serif;
 font-family: 'Rubik', sans-serif;
 font-family: 'Varela Round', sans-serif;
-font-family: 'Zen Maru Gothic', sans-serif; */
+*/
 
 body {
   background-color: #daa520;

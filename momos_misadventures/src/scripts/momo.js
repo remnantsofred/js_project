@@ -71,12 +71,13 @@ let staggerFrames = 10;
 
 export default class Momo {
 
-  constructor(canvasWidth, canvasHeight, level = null) {
+  constructor(canvasWidth, canvasHeight, ash, level = null) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.calcXPos.bind(this);
     this.calcYPos.bind(this);
     this.jump.bind(this);
+    this.ash = ash;
     this.level = level;
     this.upsidedown = false;
     this.reset();
@@ -94,7 +95,7 @@ export default class Momo {
     this.grounded = true;
   }
 
-  drawMomo(ctx){
+  draw(ctx, ash){
     let prevPos = this.y;
     this.calcYPos();
     //// moving this section below and line 69 to collision logic //// keeping here for now because it works
@@ -106,31 +107,92 @@ export default class Momo {
 
     this.calcXPos();
 
-    if(this.level === "AMBUSH" && this.upsidedown === true){
-      if(this.direction === "right" && this.xVelocity > 0) {  
-        ctx.drawImage(upsidedownMomoright, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
-        this.width = walkspriteWidth * sizeModifier;
-        this.height = walkspriteHeight * sizeModifier;
-        if (gameFrame % staggerFrames == 0){
-          if (frameX < 3) frameX ++;
-          else frameX = 1;}
-      } else if (this.direction === "left" && this.xVelocity < 0){
-        ctx.drawImage(upsidedownMomoleft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
-        this.width = walkspriteWidth * sizeModifier;
-        this.height = walkspriteHeight * sizeModifier;
-        if (gameFrame % staggerFrames == 0){
-          if (frameX < 3) frameX ++;
-          else frameX = 1;}
-      } else {
-        ctx.drawImage(upsidedownMomoright, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
-        this.width = walkspriteWidth * sizeModifier;
-        this.height = walkspriteHeight * sizeModifier;
-      };   
-    }
+    if (!this.ash){
+      if(this.level === "AMBUSH" && this.upsidedown === true){
+        if(this.direction === "right" && this.xVelocity > 0) {  
+          ctx.drawImage(upsidedownMomoright, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+          this.width = walkspriteWidth * sizeModifier;
+          this.height = walkspriteHeight * sizeModifier;
+          if (gameFrame % staggerFrames == 0){
+            if (frameX < 3) frameX ++;
+            else frameX = 1;}
+        } else if (this.direction === "left" && this.xVelocity < 0){
+          ctx.drawImage(upsidedownMomoleft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+          this.width = walkspriteWidth * sizeModifier;
+          this.height = walkspriteHeight * sizeModifier;
+          if (gameFrame % staggerFrames == 0){
+            if (frameX < 3) frameX ++;
+            else frameX = 1;}
+        } else {
+          ctx.drawImage(upsidedownMomoright, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+          this.width = walkspriteWidth * sizeModifier;
+          this.height = walkspriteHeight * sizeModifier;
+        };   
+      }
 
-    if(this.upsidedown === false){  
+      if(this.upsidedown === false){  
+        if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
+          ctx.drawImage(momoImage, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+          this.width = walkspriteWidth * sizeModifier;
+          this.height = walkspriteHeight * sizeModifier;
+          if (gameFrame % staggerFrames == 0){
+            if (frameX < 3) frameX ++;
+            else frameX = 1;
+          }
+          
+          gameFrame++
+        } else if (this.jumped === false && this.xVelocity < 0 && this.direction === "left"){
+            ctx.drawImage(momoLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+            this.width = walkspriteWidth * sizeModifier;
+            this.height = walkspriteHeight * sizeModifier;
+            if (gameFrame % staggerFrames == 0){
+              if (frameX < 3) frameX ++;
+              else frameX = 1;
+            }
+          
+          gameFrame++
+        } else if (this.jumped === true && this.direction === "right"){
+            ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
+            this.width = jumpspriteWidth * sizeModifier;
+            this.height = jumpspriteHeight * sizeModifier;
+            if (this.yVelocity < -3 && this.yVelocity > -30){
+              frameX = 2;
+            } else if (this.yVelocity < 3 && this.yVelocity >= -3) {
+              frameX = 4;
+            } else if (this.yVelocity <= CONSTANTS.TERMINAL_VEL && this.yVelocity >= 3){
+              frameX = 5;
+            }
+          
+        } else if (this.jumped === true && this.direction === "left"){
+            ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
+            this.width = jumpspriteWidth * sizeModifier;
+            this.height = jumpspriteHeight * sizeModifier;
+            if (this.yVelocity < -3 && this.yVelocity > -30){
+              frameX = 0;
+            } else if (this.yVelocity < 3 && this.yVelocity > -3) {
+              frameX = 2;
+            } else {
+              frameX = 3;
+            }
+        } else if (this.level === "AMBUSH" && this.direction === "down" && this.grounded === false){
+            ctx.drawImage(momoAmbush, 0 * ambushspriteWidth, 0, ambushspriteWidth, ambushspriteHeight, this.x, this.y, ambushspriteWidth * sizeModifier, ambushspriteHeight * sizeModifier);
+            this.width = ambushspriteWidth * sizeModifier;
+            this.height = ambushspriteHeight * sizeModifier;
+
+        } else if (this.direction === "down" && this.yVelocity !== 0){ 
+          ctx.drawImage(momoFalling, 0 * fallingspriteWidth, 0, fallingspriteWidth, fallingspriteHeight, this.x, this.y, fallingspriteWidth * sizeModifier, fallingspriteHeight * sizeModifier);
+          this.width = fallingspriteWidth * sizeModifier;
+          this.height = fallingspriteHeight * sizeModifier;
+
+        } else {
+          ctx.drawImage(momoImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+          this.width = walkspriteWidth * sizeModifier;
+          this.height = walkspriteHeight * sizeModifier;
+        }
+      }
+    } else if (this.ash){
       if(this.jumped === false && this.xVelocity > 0 && this.direction === "right")  {
-        ctx.drawImage(momoImage, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+        ctx.drawImage(ashyImage, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
         this.width = walkspriteWidth * sizeModifier;
         this.height = walkspriteHeight * sizeModifier;
         if (gameFrame % staggerFrames == 0){
@@ -149,40 +211,13 @@ export default class Momo {
           }
         
         gameFrame++
-      } else if (this.jumped === true && this.direction === "right"){
-          ctx.drawImage(momoJumpRight, frameX * 165, 0, 165, 156, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
-          this.width = jumpspriteWidth * sizeModifier;
-          this.height = jumpspriteHeight * sizeModifier;
-          if (this.yVelocity < -3 && this.yVelocity > -30){
-            frameX = 2;
-          } else if (this.yVelocity < 3 && this.yVelocity >= -3) {
-            frameX = 4;
-          } else if (this.yVelocity <= CONSTANTS.TERMINAL_VEL && this.yVelocity >= 3){
-            frameX = 5;
-          }
-        
-      } else if (this.jumped === true && this.direction === "left"){
-          ctx.drawImage(momoJumpLeft, frameX * jumpspriteWidth, 0, jumpspriteWidth, jumpspriteHeight, this.x, this.y, jumpspriteWidth * sizeModifier, jumpspriteHeight * sizeModifier);
-          this.width = jumpspriteWidth * sizeModifier;
-          this.height = jumpspriteHeight * sizeModifier;
-          if (this.yVelocity < -3 && this.yVelocity > -30){
-            frameX = 0;
-          } else if (this.yVelocity < 3 && this.yVelocity > -3) {
-            frameX = 2;
-          } else {
-            frameX = 3;
-          }
-      
-      } else if (this.direction === "down" && this.yVelocity !== 0){ 
-        ctx.drawImage(momoFalling, 0 * fallingspriteWidth, 0, fallingspriteWidth, fallingspriteHeight, this.x, this.y, fallingspriteWidth * sizeModifier, fallingspriteHeight * sizeModifier);
-        this.width = fallingspriteWidth * sizeModifier;
-        this.height = fallingspriteHeight * sizeModifier;
 
       } else {
         ctx.drawImage(momoImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
         this.width = walkspriteWidth * sizeModifier;
         this.height = walkspriteHeight * sizeModifier;
-      };
+      }
+
     }
   }
 
@@ -341,8 +376,19 @@ export default class Momo {
   }
 
   automateMovement(){
-
-
+    this.xVelocity = CONSTANTS.WALK_SPEED; 
+    this.direction = "right";
+    if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+      this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
+      this.direction = "left";
+      this.xVelocity = -CONSTANTS.WALK_SPEED;
+    }
+    if (this.x <= 0){
+      this.x = 0;
+      this.xVelocity = CONSTANTS.WALK_SPEED;
+      this.direction = "right";
+    }
+    
   }
 
   changeStartingPos(x, y){
