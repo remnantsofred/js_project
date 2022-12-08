@@ -71,7 +71,7 @@ const ambushImpactHeight = 283;
 const flyImage = new Image();
 flyImage.src = "./src/assets/cats/TigerMothFlap4.png";
 let flysizeModifier = 1;
-const flyImagewidth = 150;
+const flyImagewidth = 163;
 const flyImageHeight = 80;
 
 
@@ -256,8 +256,8 @@ export default class Momo {
 
     } else if (this.fly){
         ctx.drawImage(flyImage, frameX * flyImagewidth, 0, flyImagewidth, flyImageHeight, this.x, this.y, flyImagewidth * flysizeModifier, flyImageHeight * flysizeModifier);
-        this.width = flyImagewidth * sizeModifier;
-        this.height = flyImageHeight * sizeModifier;
+        this.width = flyImagewidth * flysizeModifier;
+        this.height = flyImageHeight * flysizeModifier;
         if (gameFrame % staggerFrames == 0){
           if (frameX < 3) frameX ++;
           else frameX = 0;
