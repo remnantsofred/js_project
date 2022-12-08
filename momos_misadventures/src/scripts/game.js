@@ -107,8 +107,8 @@ export default class Game {
     this.lostGame = false;
     this.score = 0;
     this.running = false;
-    this.play();
-    this.resetGame();
+    this.play(); //// replace play with a screen that says click to start! or instructions screen
+    this.resetGame(); //// should we have play reset game? 
 
   }
 
@@ -116,18 +116,18 @@ export default class Game {
   //// return a random level from this.levels (plural);
   //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
-    if (!this.prevlevel) {
-      return this.levels[0];
-    } else if (this.prevlevel === this.levels[0]){
-      return this.levels[1];
-    } else if (this.prevlevel === this.levels[1]){
-      return this.levels[2];
-    } else if (this.prevlevel === this.levels[2]){
-      return this.levels[3];
-    } else if (this.prevlevel === this.levels[3]){
-      this.shuffleLevelArray();
-      return this.levels[0];
-    }
+    // if (!this.prevlevel) {
+    //   return this.levels[0];
+    // } else if (this.prevlevel === this.levels[0]){
+    //   return this.levels[1];
+    // } else if (this.prevlevel === this.levels[1]){
+    //   return this.levels[2];
+    // } else if (this.prevlevel === this.levels[2]){
+    //   return this.levels[3];
+    // } else if (this.prevlevel === this.levels[3]){
+    //   this.shuffleLevelArray();
+    //   return this.levels[0];
+    // }
 
     // //// testing level4
     // if (this.prevlevel === this.levels[2]){
@@ -135,7 +135,7 @@ export default class Game {
     // } else {
     //   return this.levels[2];   
     // }
-    // return this.levels[1];
+    return this.levels[1];
   }
 
   shuffleLevelArray(){
@@ -150,10 +150,12 @@ export default class Game {
  
   //// if adding event listeners to canvas, need to pass in bound callback
   addEventListeners(){
-    window.addEventListener("keydown", this.keydownEvents.bind(this))
+    window.addEventListener("keydown", this.keydownEvents.bind(this));
+    // this.setWonMiniGame.bind(this);
+    this.resetGame.bind(this); //// won't let me bind here. Uncaught TypeError: Cannot read properties of undefined (reading 'bind')
     // a canvas example: this.canvas.addEventListener("mousedown", this.click.bind(this));
   }
-  
+   
   /// maybe change momo to run regardless because jumping is better
   keydownEvents(e){
     if (e.key === "ArrowLeft") {
@@ -181,6 +183,7 @@ export default class Game {
   }
     
 
+
   animate(){
     if (this.running){
       this.ctx.clearRect(0,0,800,800);         /// clear the canvas
@@ -192,6 +195,10 @@ export default class Game {
           if (obj.target === true) {          //// if she collides with winning object, win game
             this.winCounter += 1;
             if (this.winCounter > 11){
+              // setTimeout(()=>{
+              //   this.setWonMiniGame();
+              // }, 1000)
+              this.running = false;
               this.wonMiniGame = true;
             }
           }       
@@ -209,12 +216,18 @@ export default class Game {
       if (this.level.title === "AMBUSH"){
         this.Ashy.draw(this.ctx);
         this.Ashy.automateMovement();
-        if (this.momo.collide(this.Ashy, true)){
-          console.log('collide')
+        if (this.momo.collide(this.Ashy, true)){      ///true meaning ignoreIfs in collide function
+
+          this.running = false;
           this.wonMiniGame = true;
+          this.winMiniGame();
+        }
+        if (this.momo.y >= this.momo.momoBottom() && this.momo.grounded){ 
+          this.running = false;
+          this.lostGame = true;                      
+          this.loseGame();
         }
       } 
-
 
       this.ctx.font = '22px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
@@ -228,15 +241,27 @@ export default class Game {
 
       this.timeremaining -= 0.02;
       if (this.timeremaining <= 0){                 //// this is something wrong with this. 
+        this.running = false;
         this.lostGame = true;                       //// can't read this.level.maxtime;
-        cancelAnimationFrame(id);
         this.loseGame();
       }
-      if (this.wonMiniGame){
-        cancelAnimationFrame(id);
-        this.winMiniGame();
-      };
-    } else {
+
+    } else if (!this.running && !this.paused){
+        if (this.wonMiniGame){ 
+          this.ctx.fillStyle = "#000000CC";
+          this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+          this.ctx.font = '50px  Itim, cursive';
+          this.ctx.fillStyle = "#daa520";
+          this.ctx.fillText(' *** WIN GAME ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
+        } else if (this.lostGame){
+          
+          this.ctx.fillStyle = "#000000CC";
+          this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+          this.ctx.font = '50px  Itim, cursive';
+          this.ctx.fillStyle = "#daa520";
+          this.ctx.fillText(' *** GAME OVER ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
+        }
+    } else if (!this.running && this.paused){
       
       this.ctx.fillStyle = "#000000CC";
       this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -250,15 +275,15 @@ export default class Game {
   pauseGame(){
     if (!this.running){
       this.running = true;
+      this.paused = false;
       this.animate();
     } else {
       this.running = false;
+      this.paused = true;
     }
   }
 
-  gameAction(){
-
-  }
+  
   
   //// lose? when timer runs out. where do I decriment time? 
   //// resetScore
@@ -267,7 +292,9 @@ export default class Game {
     this.level.drawLoseStatement(this.ctx);
     //// black out / fade out screen
     //// ask to play again? 
-    this.resetGame();
+    setTimeout(()=>{
+      this.resetGame();
+    }, 1000)
   }
 
 
@@ -277,7 +304,7 @@ export default class Game {
     if (this.wonMiniGame){
       this.score += 1;                //// increment score if won
       this.wonMiniGame = false;
-    } else {
+    } else if (this.lostGame){
       this.score = 0;                 //// wipe score if lost
       this.lostGame = false;
     }
@@ -293,7 +320,8 @@ export default class Game {
       this.Ashy.collision = true;
       this.Ashy.xVelocity = CONSTANTS.WALK_SPEED;
     } 
-    
+
+    this.running = true;
     this.animate();
   }
 
@@ -304,7 +332,10 @@ export default class Game {
     //// play win sound
     //// splash for you won!
     this.level.drawWinStatement(this.ctx);
-    this.resetGame();               //// restart game 
+    // this.resetGame();               //// restart game 
+    setTimeout(()=>{
+      this.resetGame();
+    }, 1000)
   }
 
  

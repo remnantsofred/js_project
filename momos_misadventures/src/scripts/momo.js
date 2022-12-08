@@ -17,7 +17,7 @@ export const CONSTANTS = {
 };
 
 const momoImage = new Image();
-momoImage.width = 10;
+// momoImage.width = 10;
 momoImage.src = "./src/assets/cats/momo_walk_right.png"
 const momoLeft = new Image();
 momoLeft.src = "./src/assets/cats/momo_walk_left.png"
@@ -47,7 +47,6 @@ const upsidedownMomoleft = new Image();
 upsidedownMomoleft.src = "./src/assets/cats/momo_walk_left_upside_down.png"
 
 const ashyImage = new Image();
-ashyImage.width = 10;
 ashyImage.src = "./src/assets/cats/ash_walk_right.png"
 const ashyLeft = new Image();
 ashyLeft.src = "./src/assets/cats/ash_walk_left.png"
@@ -214,10 +213,17 @@ export default class Momo {
         gameFrame++
 
       } else {
-        ctx.drawImage(ashyImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
-        this.width = walkspriteWidth * sizeModifier;
-        this.height = walkspriteHeight * sizeModifier;
+        ctx.drawImage(ashyScared, 0 * ashyScaredspriteWidth, 0, ashyScaredspriteWidth, ashyScaredspriteHeight, this.x, this.y, ashyScaredspriteWidth * sizeModifier, ashyScaredspriteHeight * sizeModifier);
+        this.width = ashyScaredspriteWidth * sizeModifier;
+        this.height = ashyScaredspriteHeight * sizeModifier;
       }
+        
+
+      // } else {
+      //   ctx.drawImage(ashyImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
+      //   this.width = walkspriteWidth * sizeModifier;
+      //   this.height = walkspriteHeight * sizeModifier;
+      // }
 
     }
   }
@@ -339,88 +345,47 @@ export default class Momo {
 
   collide(obj, ignoreIfs){
       //// if the object is "collidable" from their object attribute "obj.collision" (boolean)
-      if (obj.ash) {
-        console.log('collide')
-      }
     if (obj.collision) {
       //// this below is a collision
-        if (!this.grounded &&
-          //// if momo's left corner is to the left of the object length AND
-          this.x < obj.x + obj.width &&
-          //// momo's right corner overlaps/goes beyond object left corner
-          this.x + this.width > obj.x &&  
-          //// momo is higher than object 
-          this.y < obj.y + obj.height &&
-          //// momo's feet is lower than object left corner
-          this.y + this.height > obj.y){
-          //// stop momo when she hits the platform from above (top collision). once momo collides, ground her.
-          if (this.yVelocity >= 0 && this.direction !== "down" && !ignoreIfs){
-            this.yVelocity = 0;
-            this.grounded = true;
-            this.jumped = false;    
+      if (!this.grounded &&
+        //// if momo's left corner is to the left of the object length AND
+        this.x < obj.x + obj.width &&
+        //// momo's right corner overlaps/goes beyond object left corner
+        this.x + this.width > obj.x &&  
+        //// momo is higher than object 
+        this.y < obj.y + obj.height &&
+        //// momo's feet is lower than object left corner
+        this.y + this.height > obj.y){
+        //// stop momo when she hits the platform from above (top collision). once momo collides, ground her.
+        if (this.yVelocity >= 0 && this.direction !== "down" && !ignoreIfs){
+          this.yVelocity = 0;
+          this.grounded = true;
+          this.jumped = false;    
 
-          //// this section is bottom collision
-          //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
-          //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
-          //// the jump can register
-          } else if (this.yVelocity < 0 && this.yVelocity >= CONSTANTS.JUMP_SPEED + 4  && !ignoreIfs) {
-            this.yVelocity = 2;
-            this.grounded = false;
-            this.jumped = false;
-            this.y = obj.y + obj.height + 1;
-            // console.log('grounded false')
-          }
-          return true;
-        //// below else means no collision
-        } else {
-
+        //// this section is bottom collision
+        //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
+        //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
+        //// the jump can register
+        } else if (this.yVelocity < 0 && this.yVelocity >= CONSTANTS.JUMP_SPEED + 4  && !ignoreIfs) {
+          this.yVelocity = 2;
+          this.grounded = false;
+          this.jumped = false;
+          this.y = obj.y + obj.height + 1;
           // console.log('grounded false')
-          if (!ignoreIfs) {
-            this.grounded = false;
-          }
-          return false;
         }
-    }
-  }
-  
-  
-  collideCat(cat){
-      //// if the object is "collidable" from their object attribute "obj.collision" (boolean)
-    
-      //// this below is a collision
-    if (!this.grounded &&
-      //// if momo's left corner is to the left of the object length AND
-      this.x < cat.x + cat.width &&
-      //// momo's right corner overlaps/goes beyond object left corner
-      this.x + this.width > cat.x &&  
-      //// momo is higher than object 
-      this.y < cat.y + cat.height &&
-      //// momo's feet is lower than object left corner
-      this.y + this.height > cat.y){
-      //// stop momo when she hits the platform from above (top collision). once momo collides, ground her.
-      if (this.yVelocity >= 0 && this.direction !== "down"){
-        this.yVelocity = 0;
-        this.grounded = true;
-        this.jumped = false;    
-
-      //// this section is bottom collision
-      //// to enable jump from platform, we must have the below if condition (registering a jump keypress)
-      //// otherwise game will draw again, including running this collide method which would set momo jumped to false before 
-      //// the jump can register
-      } else if (this.yVelocity < 0 && this.yVelocity >= CONSTANTS.JUMP_SPEED + 4) {
-        this.yVelocity = 2;
-        this.grounded = false;
-        this.jumped = false;
-        this.y = obj.y + obj.height + 1;
+        return true;
+      //// below else means no collision
+      } else {
+        // console.log('grounded false')
+        if (!ignoreIfs) {
+          this.grounded = false; 
+        }
+        return false;
       }
-      return true;
-    //// below else means no collision
-    } else {
-      this.grounded = false;
-      return false;
     }
-    
   }
+  
+
   
   //// this is momo's true ground or "floor" since she has height and we don't want her to sink below ground
   //// momo bottom will change if you change her height so just use the standing sprite height
