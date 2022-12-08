@@ -118,8 +118,11 @@ export default class Game {
     this.lostGame = false;
     this.score = 0;
     this.running = false;
-    this.play(); //// replace play with a screen that says click to start! or instructions screen
-    this.resetGame(); //// should we have play reset game? 
+    this.started = false;
+    // this.play(); //// replace play with a screen that says click to start! or instructions screen
+    this.addEventListeners();
+    this.startGameScreen();
+    // this.resetGame(); //// should we have play reset game? 
 
   }
 
@@ -144,7 +147,7 @@ export default class Game {
       this.shuffleLevelArray();
       return this.levels[0];
     }
-
+ 
     // //// testing level4
     // if (this.prevlevel === this.levels[2]){
     //   return this.levels[2];    
@@ -160,8 +163,10 @@ export default class Game {
   }
   
   play(){
+    this.started = true;
     this.running = true;
-    this.addEventListeners();
+    // this.addEventListeners();
+    this.resetGame();
   }
  
   //// if adding event listeners to canvas, need to pass in bound callback
@@ -194,6 +199,8 @@ export default class Game {
         this.pauseGame();
     } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
         this.gameAction();
+    } else if (e.key === "Enter" && this.running === false){
+        this.play();
     }
     //// ^ to do later: add action key for spacebar          
   }
@@ -312,7 +319,21 @@ export default class Game {
   }
 
   startGameScreen(){
-    
+    this.ctx.fillStyle = "#F5F5DC";
+    this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    this.ctx.font = '50px  Itim, cursive';
+    this.ctx.fillStyle = "#daa520";
+    this.ctx.fillText('Press Enter to Start Game', CANVAS_WIDTH/7.5, CANVAS_HEIGHT/2);
+  }
+
+  retryGameScreen(){
+    this.ctx.fillStyle = "#000000";
+    this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    this.ctx.font = '50px  Itim, cursive';
+    this.ctx.fillStyle = "#daa520";
+
+    this.ctx.fillText('Your high score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
+    this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
   }
   
   //// lose? when timer runs out. where do I decriment time? 
@@ -322,8 +343,9 @@ export default class Game {
     this.level.drawLoseStatement(this.ctx);
     //// black out / fade out screen
     //// ask to play again? 
+    this.started = false;
     setTimeout(()=>{
-      this.resetGame();
+      this.retryGameScreen();
     }, 1000)
   }
 
@@ -337,6 +359,7 @@ export default class Game {
     } else if (this.lostGame){
       this.score = 0;                 //// wipe score if lost
       this.lostGame = false;
+      this.started = false;
     }
     this.level = this.randomSelectLevel();         //// select a new level
     this.timeremaining = this.level.maxtime;
