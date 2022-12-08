@@ -197,8 +197,8 @@ export default class Game {
       }
     } else if (e.key === ' ' || e.key === "Spacebar"){
         this.pauseGame();
-    } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
-        this.gameAction();
+    // } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
+    //     this.gameAction();
     } else if (e.key === "Enter" && this.running === false){
         this.play();
     }
@@ -209,7 +209,7 @@ export default class Game {
 
   animate(){
     if (this.running){
-      this.ctx.clearRect(0,0,800,800);         /// clear the canvas
+      this.ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_WIDTH);         /// clear the canvas
       this.level.drawBackground(this.ctx);     /// draw the level's background
       this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
       this.wonMiniGame = false;
@@ -317,10 +317,11 @@ export default class Game {
       this.paused = true;
     }
   }
-
+  // (upsidedownMomoright, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier)
   startGameScreen(){
     this.ctx.fillStyle = "#F5F5DC";
     this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    // this.ctx.drawImage(momoCanonball, 500, 0);
     this.ctx.font = '50px  Itim, cursive';
     this.ctx.fillStyle = "#daa520";
     this.ctx.fillText('Press Enter to Start Game', CANVAS_WIDTH/7.5, CANVAS_HEIGHT/2);
@@ -335,6 +336,13 @@ export default class Game {
     this.ctx.fillText('Your high score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
     this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
   }
+
+  // splashscreen(){
+  //   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  //   this.ctx.fillStyle = "#F5F5DC";
+  //   this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  //   this.ctx.drawImage(momoCanonball, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  // }
   
   //// lose? when timer runs out. where do I decriment time? 
   //// resetScore

@@ -74,6 +74,12 @@ let flysizeModifier = 1;
 const flyImagewidth = 163;
 const flyImageHeight = 80;
 
+const momoCanonball = new Image();
+momoCanonball.src = "./src/assets/cats/momo_ambush_fall_action_lines.png"; 
+const momoCannonballWidth = 298;
+const momoCannonballHeight = 298;
+
+
 
 let sizeModifier = 0.75;
 let frameX = 1;
