@@ -2,7 +2,7 @@ import Momo, { CONSTANTS } from './momo';
 import Level, { level1Background, level2Background, level4Background} from './level'
 import GameObject from './game_object';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../index.js';
-
+import Music from './music';
 
 
 //// starting a new game should entail:
@@ -109,7 +109,7 @@ export default class Game {
       new Level(6, 'KILL', '', level4Background, 7, level6Objects, 1, this.fly),
       // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
-
+    this.music = new Music(gameSoundFiles["kirbysong"]);
     this.prevlevel = null;
     // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
     this.level = this.levels[0];
