@@ -237,6 +237,9 @@ export default class Game {
         this.winMiniGame();
       };
     } else {
+      
+      this.ctx.fillStyle = "#000000CC";
+      this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       this.ctx.font = '50px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
       this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
