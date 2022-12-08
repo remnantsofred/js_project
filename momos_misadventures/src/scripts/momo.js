@@ -56,6 +56,15 @@ ashyScared.src = "./src/assets/cats/ashy_scared.png"
 const ashyScaredspriteWidth = 141;
 const ashyScaredspriteHeight = 120;
 
+const ambushImpactjustAsh = new Image();
+ambushImpactjustAsh.src = "./src/assets/cats/ambushcollision_justashy.png"
+const ambushImpactjustAshWidth = 285;
+const ambushImpactjustAshHeight = 283;
+
+const ambushImpact = new Image();
+ambushImpact.src = "./src/assets/cats/ambushcollision.png"
+const ambushImpactWidth = 285;
+const ambushImpactHeight = 283;
 
 
 let sizeModifier = 0.75;
@@ -212,12 +221,24 @@ export default class Momo {
         
         gameFrame++
 
-      } else {
-        ctx.drawImage(ashyScared, 0 * ashyScaredspriteWidth, 0, ashyScaredspriteWidth, ashyScaredspriteHeight, this.x, this.y, ashyScaredspriteWidth * sizeModifier, ashyScaredspriteHeight * sizeModifier);
-        this.width = ashyScaredspriteWidth * sizeModifier;
-        this.height = ashyScaredspriteHeight * sizeModifier;
-      }
+      // } else if (this.direction === "scared"){
+      //   ctx.drawImage(ashyScared, 0 * ashyScaredspriteWidth, 0, ashyScaredspriteWidth, ashyScaredspriteHeight, this.x, this.y, ashyScaredspriteWidth * sizeModifier, ashyScaredspriteHeight * sizeModifier);
+      //   this.width = ashyScaredspriteWidth * sizeModifier;
+      //   this.height = ashyScaredspriteHeight * sizeModifier;
+      // }
         
+      // } else if (this.direction === "scared"){
+      //   ctx.drawImage(ambushImpactjustAsh, 0 * ambushImpactjustAshWidth, 0, ambushImpactjustAshWidth, ambushImpactjustAshHeight, this.x, this.y, ambushImpactjustAshWidth * sizeModifier, ambushImpactjustAshHeight * sizeModifier);
+      //   this.width = ambushImpactjustAshWidth * sizeModifier;
+      //   this.height = ambushImpactjustAshHeight * sizeModifier;
+      // }
+      
+      } else if (this.direction === "scared"){
+        ctx.drawImage(ambushImpact, 0 * ambushImpactWidth, 0, ambushImpactWidth, ambushImpactHeight, this.x - 75, this.y - 55, ambushImpactWidth * sizeModifier, ambushImpactHeight * sizeModifier);
+        this.width = ambushImpactWidth * sizeModifier; 
+        this.height = ambushImpactHeight * sizeModifier;
+      }
+  
 
       // } else {
       //   ctx.drawImage(ashyImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);

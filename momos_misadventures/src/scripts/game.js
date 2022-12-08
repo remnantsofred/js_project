@@ -101,7 +101,7 @@ export default class Game {
 
     this.prevlevel = null;
     // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
-    this.level = this.levels[1];
+    this.level = this.levels[0];
     this.winCounter = 0;
     this.wonMiniGame = false;
     this.lostGame = false;
@@ -116,18 +116,18 @@ export default class Game {
   //// return a random level from this.levels (plural);
   //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
-    // if (!this.prevlevel) {
-    //   return this.levels[0];
-    // } else if (this.prevlevel === this.levels[0]){
-    //   return this.levels[1];
-    // } else if (this.prevlevel === this.levels[1]){
-    //   return this.levels[2];
-    // } else if (this.prevlevel === this.levels[2]){
-    //   return this.levels[3];
-    // } else if (this.prevlevel === this.levels[3]){
-    //   this.shuffleLevelArray();
-    //   return this.levels[0];
-    // }
+    if (!this.prevlevel) {
+      return this.levels[0];
+    } else if (this.prevlevel === this.levels[0]){
+      return this.levels[1];
+    } else if (this.prevlevel === this.levels[1]){
+      return this.levels[2];
+    } else if (this.prevlevel === this.levels[2]){
+      return this.levels[3];
+    } else if (this.prevlevel === this.levels[3]){
+      this.shuffleLevelArray();
+      return this.levels[0];
+    }
 
     // //// testing level4
     // if (this.prevlevel === this.levels[2]){
@@ -135,7 +135,7 @@ export default class Game {
     // } else {
     //   return this.levels[2];   
     // }
-    return this.levels[1];
+    // return this.levels[1];
   }
 
   shuffleLevelArray(){
@@ -195,11 +195,9 @@ export default class Game {
           if (obj.target === true) {          //// if she collides with winning object, win game
             this.winCounter += 1;
             if (this.winCounter > 11){
-              // setTimeout(()=>{
-              //   this.setWonMiniGame();
-              // }, 1000)
               this.running = false;
               this.wonMiniGame = true;
+              this.winMiniGame();
             }
           }       
           break;
@@ -211,13 +209,14 @@ export default class Game {
       };
 
 
-      this.momo.draw(this.ctx);
+     
 
       if (this.level.title === "AMBUSH"){
         this.Ashy.draw(this.ctx);
         this.Ashy.automateMovement();
         if (this.momo.collide(this.Ashy, true)){      ///true meaning ignoreIfs in collide function
-
+          this.Ashy.direction = "scared";
+          this.Ashy.draw(this.ctx);
           this.running = false;
           this.wonMiniGame = true;
           this.winMiniGame();
@@ -228,6 +227,10 @@ export default class Game {
           this.loseGame();
         }
       } 
+
+      if (this.level.title !== 'AMBUSH' || !this.wonMiniGame) {
+        this.momo.draw(this.ctx);
+      }
 
       this.ctx.font = '22px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
@@ -335,7 +338,7 @@ export default class Game {
     // this.resetGame();               //// restart game 
     setTimeout(()=>{
       this.resetGame();
-    }, 1000)
+    }, 2000)
   }
 
  
