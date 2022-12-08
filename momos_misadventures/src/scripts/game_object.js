@@ -6,6 +6,8 @@
 //// moving objects: momo, ash, (daphne?), fly
 
 
+
+
 export default class GameObject {
 
   //// generic constructor for all objects (x & y coordinates, dimensions, moving or not, collision T/F, bounce y/n
@@ -42,6 +44,27 @@ export default class GameObject {
   
   
   //// animate
+  automateMovement(){
+    if (this.direction === "right"){
+      this.xVelocity = CONSTANTS.WALK_SPEED;
+      if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+        // this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
+        this.direction = "left";
+        this.xVelocity = -CONSTANTS.WALK_SPEED;
+      }
+    } 
+    
+    if (this.direction === "left"){
+      this.xVelocity = -CONSTANTS.WALK_SPEED;
+      if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
+        this.xVelocity = -CONSTANTS.WALK_SPEED;
+      } else if (this.x <= 0){
+      // this.x = 0;
+        this.xVelocity = CONSTANTS.WALK_SPEED;
+        this.direction = "right";
+      }
+    }
+  }
 
 
 }

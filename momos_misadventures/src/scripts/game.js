@@ -27,7 +27,7 @@ export default class Game {
     this.dimensions = { width: CANVAS_WIDTH, height: CANVAS_HEIGHT };
     this.canvas = canvas;
     // this momo is the real momo, okay. 
-    this.momo = new Momo(this.dimensions.width, this.dimensions.height, false);
+    this.momo = new Momo(this.dimensions.width, this.dimensions.height, false, false);
     /// use #FFffff for transparent
     /// use #7cfd21 for bright green (starting out to gauge pos)
     //// this is the ground below:
@@ -48,10 +48,11 @@ export default class Game {
     const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#fde321", true, false, false);
     //// need to fix Ashy later
     // const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
-    this.Ashy = new Momo(this.dimensions.width, this.dimensions.height, true);
+    this.Ashy = new Momo(this.dimensions.width, this.dimensions.height, true, false);
     const fauxshelf = new GameObject(this.ctx, 235, 280, 200, 5, "#7cfd21", false, false, false);
     const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "#FFffff", true, false, false);
-    const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
+    this.fly = new Momo(this.dimensions.width, this.dimensions.height, false, true);
+    // const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
     // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
 
@@ -77,7 +78,7 @@ export default class Game {
     const level3Objects = [
       ground,
       firstObjectHidden
-      
+      /// use this.fly (which is a momo. lol)
     ];
     //// forbidden furniture v2 (living room)
     const level4Objects = [
@@ -93,8 +94,8 @@ export default class Game {
     //// constructor(id, title, subtitle, background, maxtime, objects, gravityModifier, target)
     this.levels = [ 
       new Level(1, 'CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
-      new Level(2, 'AMBUSH', '', level2Background, 20, level2Objects, 1, this.Ashy),
-      new Level(3, 'KILL', '', level4Background, 10, level3Objects, 1, fly),
+      new Level(2, 'AMBUSH', '', level2Background, 15, level2Objects, 1, this.Ashy),
+      new Level(3, 'KILL', '', level4Background, 10, level3Objects, 1, this.fly),
       new Level(4, 'CLIMB', '', level4Background, 10, level4Objects, 1, curtainrod),
       // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
@@ -208,9 +209,6 @@ export default class Game {
         obj.draw(this.ctx);
       };
 
-
-     
-
       if (this.level.title === "AMBUSH"){
         this.Ashy.draw(this.ctx);
         this.Ashy.automateMovement();
@@ -225,6 +223,16 @@ export default class Game {
           this.running = false;
           this.lostGame = true;                      
           this.loseGame();
+        }
+      } else if (this.level.title === "KILL"){
+        this.fly.draw(this.ctx);
+        this.fly.automateMovement();
+        if (this.momo.collide(this.fly, true)){      ///true meaning ignoreIfs in collide function
+          // this.fly.direction = "scared";
+          // this.fly.draw(this.ctx);
+          this.running = false;
+          this.wonMiniGame = true;
+          this.winMiniGame();
         }
       } 
 
@@ -251,7 +259,7 @@ export default class Game {
 
     } else if (!this.running && !this.paused){
         if (this.wonMiniGame){ 
-          this.ctx.fillStyle = "#000000CC";
+          this.ctx.fillStyle = "#00000080";
           this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
           this.ctx.font = '50px  Itim, cursive';
           this.ctx.fillStyle = "#daa520";
@@ -322,7 +330,14 @@ export default class Game {
       this.Ashy.direction = "right";
       this.Ashy.collision = true;
       this.Ashy.xVelocity = CONSTANTS.WALK_SPEED;
-    } 
+    } else if (this.level.title === "KILL"){
+      this.momo.level = "KILL";
+      this.momo.grounded = true;
+      this.fly.changeStartingPos(300, 190);
+      this.fly.direction = "right";
+      this.fly.collision = true;
+      this.fly.xVelocity = CONSTANTS.WALK_SPEED;
+    }
 
     this.running = true;
     this.animate();

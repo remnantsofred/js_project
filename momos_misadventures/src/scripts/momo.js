@@ -14,6 +14,7 @@ export const CONSTANTS = {
   MAX_MOMO_SPEED: 20,
   LEFTWALL: 0,
   RIGHTWALL: 800,
+  FLYSPEED: 12,
 };
 
 const momoImage = new Image();
@@ -67,6 +68,13 @@ const ambushImpactWidth = 285;
 const ambushImpactHeight = 283;
 
 
+const flyImage = new Image();
+flyImage.src = "./src/assets/cats/TigerMothFlap4.png";
+let flysizeModifier = 1;
+const flyImagewidth = 150;
+const flyImageHeight = 80;
+
+
 let sizeModifier = 0.75;
 let frameX = 1;
 let frameY = 0;
@@ -79,13 +87,14 @@ let staggerFrames = 10;
 
 export default class Momo {
 
-  constructor(canvasWidth, canvasHeight, ash, level = null) {
+  constructor(canvasWidth, canvasHeight, ash, fly, level = null) {
     this.canvasWidth = canvasWidth;
     this.canvasHeight = canvasHeight;
     this.calcXPos.bind(this);
     this.calcYPos.bind(this);
     this.jump.bind(this);
     this.ash = ash;
+    this.fly = fly;
     this.level = level;
     this.upsidedown = false;
     this.reset();
@@ -116,7 +125,7 @@ export default class Momo {
 
     this.calcXPos();
 
-    if (!this.ash){
+    if (!this.ash && !this.fly){
       if(this.level === "AMBUSH" && this.upsidedown === true){
         if(this.direction === "right" && this.xVelocity > 0) {  
           ctx.drawImage(upsidedownMomoright, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
@@ -239,37 +248,48 @@ export default class Momo {
         this.height = ambushImpactHeight * sizeModifier;
       }
   
-
       // } else {
       //   ctx.drawImage(ashyImage, 0 * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
       //   this.width = walkspriteWidth * sizeModifier;
       //   this.height = walkspriteHeight * sizeModifier;
       // }
 
-    }
+    } else if (this.fly){
+        ctx.drawImage(flyImage, frameX * flyImagewidth, 0, flyImagewidth, flyImageHeight, this.x, this.y, flyImagewidth * flysizeModifier, flyImageHeight * flysizeModifier);
+        this.width = flyImagewidth * sizeModifier;
+        this.height = flyImageHeight * sizeModifier;
+        if (gameFrame % staggerFrames == 0){
+          if (frameX < 3) frameX ++;
+          else frameX = 0;
+        }
+        
+        gameFrame++
+    } 
   }
 
   // update Y position (height / vertical pos)
   calcYPos(){
     /// if momo is currently higher than ground,
     /// and as long as momo isn't falling beyond fast rate (12), apply gravity (which is positive, so go down)
-    if (this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom() && !this.grounded){
+    if (!this.fly){
+      if (this.yVelocity < CONSTANTS.TERMINAL_VEL && this.y < this.momoBottom() && !this.grounded){
         this.yVelocity += CONSTANTS.GRAVITY;
-    } 
-    if (this.grounded && !this.jumped && this.direction !== "down"){
-      this.yVelocity = 0;
-    }
-    if (this.y <= this.momoBottom()) {
-      /// momo falls down
-      this.y += this.yVelocity
-      // if momo tries to go lower than floor, stop her at floor. wipe her "jumped" state
-      if (this.y >= this.momoBottom()){
-        this.y = this.momoBottom();
-        this.jumped = false;
+      } 
+      if (this.grounded && !this.jumped && this.direction !== "down"){
         this.yVelocity = 0;
-        // this.grounded = true;
       }
-    } 
+      if (this.y <= this.momoBottom()) {
+        /// momo falls down
+        this.y += this.yVelocity
+        // if momo tries to go lower than floor, stop her at floor. wipe her "jumped" state
+        if (this.y >= this.momoBottom()){
+          this.y = this.momoBottom();
+          this.jumped = false;
+          this.yVelocity = 0;
+          // this.grounded = true;
+        }
+      } 
+    }
   }
   
   // updates X position (horizontal across board)
@@ -416,21 +436,21 @@ export default class Momo {
 
   automateMovement(){
     if (this.direction === "right"){
-      this.xVelocity = CONSTANTS.WALK_SPEED;
+      this.xVelocity = this.fly? CONSTANTS.FLYSPEED : CONSTANTS.WALK_SPEED;
       if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
         // this.x = (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier));
         this.direction = "left";
-        this.xVelocity = -CONSTANTS.WALK_SPEED;
+        this.xVelocity = this.fly? -CONSTANTS.FLYSPEED : -CONSTANTS.WALK_SPEED;
       }
     } 
     
     if (this.direction === "left"){
-      this.xVelocity = -CONSTANTS.WALK_SPEED;
+      this.xVelocity = this.fly? -CONSTANTS.FLYSPEED : -CONSTANTS.WALK_SPEED;
       if (this.x >= (CONSTANTS.RIGHTWALL - (walkspriteWidth* sizeModifier))){
-        this.xVelocity = -CONSTANTS.WALK_SPEED;
+        this.xVelocity = this.fly? -CONSTANTS.FLYSPEED : -CONSTANTS.WALK_SPEED;
       } else if (this.x <= 0){
       // this.x = 0;
-        this.xVelocity = CONSTANTS.WALK_SPEED;
+        this.xVelocity = this.fly? CONSTANTS.FLYSPEED : CONSTANTS.WALK_SPEED;
         this.direction = "right";
       }
     }
