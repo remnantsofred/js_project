@@ -198,7 +198,7 @@ export default class Game {
         this.pauseGame();
     // } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
     //     this.gameAction();
-    } else if (e.key === "Enter" && this.running === false){
+    } else if (e.key === "Enter" && !this.running){
         this.play();
     }
     //// ^ to do later: add action key for spacebar          
@@ -311,7 +311,7 @@ export default class Game {
       this.running = true;
       this.paused = false;
       this.animate();
-    } else {
+    } else if (this.running){
       this.running = false;
       this.paused = true;
     }
