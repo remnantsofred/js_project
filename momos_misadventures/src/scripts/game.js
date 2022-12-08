@@ -109,7 +109,6 @@ export default class Game {
       new Level(6, 'KILL', '', level4Background, 7, level6Objects, 1, this.fly),
       // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
-    this.music = new Music(gameSoundFiles["kirbysong"]);
     this.prevlevel = null;
     // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
     this.level = this.levels[0];
@@ -324,7 +323,9 @@ export default class Game {
     // this.ctx.drawImage(momoCanonball, 500, 0);
     this.ctx.font = '50px  Itim, cursive';
     this.ctx.fillStyle = "#daa520";
-    this.ctx.fillText('Press Enter to Start Game', CANVAS_WIDTH/7.5, CANVAS_HEIGHT/2);
+    this.ctx.fillText('Press Enter to Start Game', CANVAS_WIDTH/7.5, 150);
+    this.ctx.fillText('-> Arrow keys to move', CANVAS_WIDTH/7.5, 350);
+    this.ctx.fillText('-> Spacebar to pause', CANVAS_WIDTH/7.5, 450);
   }
 
   retryGameScreen(){
