@@ -286,7 +286,9 @@ export default class Momo {
           this.y = this.momoBottom();
           this.jumped = false;
           this.yVelocity = 0;
-          // this.grounded = true;
+          // if (this.level === "AMBUSH"){ 
+          //   this.grounded = true;
+          // }
         }
       } 
     }

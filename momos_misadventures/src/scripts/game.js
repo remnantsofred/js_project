@@ -91,12 +91,22 @@ export default class Game {
       tv
       
     ];
+
+    const level6Objects = [
+      ground,
+      firstObjectHidden,
+      couchTop,
+    
+    ];
+
     //// constructor(id, title, subtitle, background, maxtime, objects, gravityModifier, target)
     this.levels = [ 
       new Level(1, 'CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
-      new Level(2, 'AMBUSH', '', level2Background, 15, level2Objects, 1, this.Ashy),
-      new Level(3, 'KILL', '', level4Background, 10, level3Objects, 1, this.fly),
+      new Level(2, 'AMBUSH', '', level2Background, 6, level2Objects, 1, this.Ashy),
+      new Level(3, 'KILL', '', level4Background, 4, level3Objects, 1, this.fly),
       new Level(4, 'CLIMB', '', level4Background, 10, level4Objects, 1, curtainrod),
+      new Level(5, 'KILL', '', level1Background, 7, level1Objects, 1, this.fly),
+      new Level(6, 'KILL', '', level4Background, 7, level6Objects, 1, this.fly),
       // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
 
@@ -117,6 +127,7 @@ export default class Game {
   //// return a random level from this.levels (plural);
   //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
+    
     if (!this.prevlevel) {
       return this.levels[0];
     } else if (this.prevlevel === this.levels[0]){
@@ -126,6 +137,10 @@ export default class Game {
     } else if (this.prevlevel === this.levels[2]){
       return this.levels[3];
     } else if (this.prevlevel === this.levels[3]){
+      return this.levels[4];
+    } else if (this.prevlevel === this.levels[4]){
+      return this.levels[5]; 
+    } else if (this.prevlevel === this.levels[5]){
       this.shuffleLevelArray();
       return this.levels[0];
     }
@@ -210,7 +225,7 @@ export default class Game {
       };
 
       if (this.level.title === "AMBUSH"){
-        this.Ashy.draw(this.ctx);
+        this.Ashy.draw(this.ctx); 
         this.Ashy.automateMovement();
         if (this.momo.collide(this.Ashy, true)){      ///true meaning ignoreIfs in collide function
           this.Ashy.direction = "scared";
@@ -219,7 +234,9 @@ export default class Game {
           this.wonMiniGame = true;
           this.winMiniGame();
         }
-        if (this.momo.y >= this.momo.momoBottom() && this.momo.grounded){ 
+        console.log("debugging")
+        if (this.momo.y >= this.momo.momoBottom()){ 
+          console.log("lose game - why no lose?")
           this.running = false;
           this.lostGame = true;                      
           this.loseGame();
@@ -294,7 +311,9 @@ export default class Game {
     }
   }
 
-  
+  startGameScreen(){
+    
+  }
   
   //// lose? when timer runs out. where do I decriment time? 
   //// resetScore
@@ -333,7 +352,13 @@ export default class Game {
     } else if (this.level.title === "KILL"){
       this.momo.level = "KILL";
       this.momo.grounded = true;
-      this.fly.changeStartingPos(300, 190);
+      if (this.level.id === 3){
+        this.fly.changeStartingPos(300, 170);
+      } else if (this.level.id === 5){
+        this.fly.changeStartingPos(425, 85);
+      } else if (this.level.id === 6){  
+        this.fly.changeStartingPos(275, 65);
+      }
       this.fly.direction = "right";
       this.fly.collision = true;
       this.fly.xVelocity = CONSTANTS.WALK_SPEED;
