@@ -50,7 +50,7 @@ export default class Game {
     // const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
     this.Ashy = new Momo(this.dimensions.width, this.dimensions.height, true);
     const fauxshelf = new GameObject(this.ctx, 235, 280, 200, 5, "#7cfd21", false, false, false);
-    const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "7cfd21", true, false, false);
+    const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "#FFffff", true, false, false);
     const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
     // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
@@ -116,18 +116,18 @@ export default class Game {
   //// return a random level from this.levels (plural);
   //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
-    // if (!this.prevlevel) {
-    //   return this.levels[0];
-    // } else if (this.prevlevel === this.levels[0]){
-    //   return this.levels[1];
-    // } else if (this.prevlevel === this.levels[1]){
-    //   return this.levels[2];
-    // } else if (this.prevlevel === this.levels[2]){
-    //   return this.levels[3];
-    // } else if (this.prevlevel === this.levels[3]){
-    //   this.shuffleLevelArray();
-    //   return this.levels[0];
-    // }
+    if (!this.prevlevel) {
+      return this.levels[0];
+    } else if (this.prevlevel === this.levels[0]){
+      return this.levels[1];
+    } else if (this.prevlevel === this.levels[1]){
+      return this.levels[2];
+    } else if (this.prevlevel === this.levels[2]){
+      return this.levels[3];
+    } else if (this.prevlevel === this.levels[3]){
+      this.shuffleLevelArray();
+      return this.levels[0];
+    }
 
     // //// testing level4
     // if (this.prevlevel === this.levels[2]){
@@ -135,7 +135,7 @@ export default class Game {
     // } else {
     //   return this.levels[2];   
     // }
-    return this.levels[1];
+    // return this.levels[1];
   }
 
   shuffleLevelArray(){

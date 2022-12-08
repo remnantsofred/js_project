@@ -39,13 +39,30 @@ body {
   color: whitesmoke
 } 
 
+header {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.emptyDiv{
+  width: 70px;
+}
+
+nav a {
+  color: black;
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+nav a:hover {
+  opacity: 0.5;
+  color: blue
+}
 
 #gamescreen {
   border: 5px solid black;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
   width: 800;
   height: 600;
 }

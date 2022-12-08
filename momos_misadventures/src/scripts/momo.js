@@ -342,7 +342,7 @@ export default class Momo {
       if (obj.ash) {
         console.log('collide')
       }
-    if (obj.collision === true) {
+    if (obj.collision) {
       //// this below is a collision
         if (!this.grounded &&
           //// if momo's left corner is to the left of the object length AND
