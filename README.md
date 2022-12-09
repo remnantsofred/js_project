@@ -110,7 +110,8 @@ This project will be implemented with the following technologies:
 - A mouseover/hover/drawer effect that shows the real Momo slide out
 - Music & sound effects (using my real cats)
 - More flavorful transitions with images, sounds, animations
-- Update 
+- Additional collision effects (KILL)
+- Update/refine collision logic
 - More levels! (don't want to spoil them but I have many ideas)
   - Okay fine maybe just the titles: 
     - WAKE
