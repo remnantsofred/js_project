@@ -69,35 +69,6 @@ This project will be implemented with the following technologies:
 - `Webpack` to bundle and transpile the source JavaScript code
 - `npm` to manage project dependencies
 
-## Original Implementation Timeline (12/02/2022 - 12/08/2022)
-
-- Friday:
-  - set up project skeleton and classes 
-  - compile list of needed assets overall and per mini-game
-  - source assets
-
-- Saturday:
-  - Render the game screen and be able to switch backgrounds
-  - write the logic for 3 mini-games 
-
-- Sunday: 
-  - Render the remaining game assets 
-  - Work on animation where needed
-
-- Monday: 
-  - Address any bugs
-  - Finish 
-
-- Tuesday: 
-  - Webpage styling and polishing
-
-- Wednesday:
-  - Final tweaks and improvements
-  - Update README 
-
-- Thursday
-  - Deploy to Github pages
-
 
 ## To-dos 
 - Fix the pause -> speeding up levels bug
