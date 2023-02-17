@@ -372,10 +372,13 @@ export default class Game {
       this.retryGameScreen();
     }, 1000)
   }
-
-
+  
+  
   resetGame(){
-    this.prevlevel = this.level;      //// save current level as prev level
+    console.log('hit reset game')
+    // if (this.prevlevel !== null){
+    //   this.prevlevel = this.level;      //// save current level as prev level
+    // }
     this.winCounter = 0;              //// reset win counter
     if (this.wonMiniGame){
       this.score += 1;                //// increment score if won
@@ -385,7 +388,8 @@ export default class Game {
       this.lostGame = false;
       this.started = false;
     }
-    this.level = this.randomSelectLevel();         //// select a new level
+    this.level = this.randomSelectLevel();     
+    this.prevlevel = this.level;    //// select a new level
     this.timeremaining = this.level.maxtime;
     this.momo.reset();
     if (this.level.title === "AMBUSH"){
