@@ -118,6 +118,7 @@ export default class Game {
     this.score = 0;
     this.running = false;
     this.started = false;
+    this.highScore = 0;
     // this.play(); //// replace play with a screen that says click to start! or instructions screen
     this.addEventListeners();
     this.startGameScreen();
@@ -194,11 +195,11 @@ export default class Game {
       } else if (!e.repeat){
         this.momo.moveRight("walk");
       }
-    } else if (e.key === ' ' || e.key === "Spacebar"){
-        this.pauseGame();
+    // } else if (e.key === ' ' || e.key === "Spacebar"){
+    //     this.pauseGame();
     // } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
     //     this.gameAction();
-    } else if (e.key === "Enter" && this.running === false){
+    } else if (e.key === "Enter" && !this.running && !this.started){
         this.play();
     }
     //// ^ to do later: add action key for spacebar          
@@ -306,16 +307,17 @@ export default class Game {
   }
   
   //// pause
-  pauseGame(){
-    if (!this.running){
-      this.running = true;
-      this.paused = false;
-      this.animate();
-    } else {
-      this.running = false;
-      this.paused = true;
-    }
-  }
+  // pauseGame(){
+  //   if (!this.running){
+  //     this.running = true;
+  //     this.paused = false;
+  //     debugger 
+  //     this.animate();
+  //   } else if (this.running){
+  //     this.running = false;
+  //     this.paused = true;
+  //   }
+  // }
   // (upsidedownMomoright, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier)
   startGameScreen(){
     this.ctx.fillStyle = "#F5F5DC";
@@ -325,7 +327,7 @@ export default class Game {
     this.ctx.fillStyle = "#daa520";
     this.ctx.fillText('Press Enter to Start Game', CANVAS_WIDTH/7.5, 150);
     this.ctx.fillText('-> Arrow keys to move', CANVAS_WIDTH/7.5, 350);
-    this.ctx.fillText('-> Spacebar to pause', CANVAS_WIDTH/7.5, 450);
+    // this.ctx.fillText('-> Spacebar to pause', CANVAS_WIDTH/7.5, 450);
   }
 
   retryGameScreen(){
@@ -334,8 +336,21 @@ export default class Game {
     this.ctx.font = '50px  Itim, cursive';
     this.ctx.fillStyle = "#daa520";
 
-    this.ctx.fillText('Your high score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
-    this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
+    if (this.highScore === 0) {
+      this.ctx.fillText('Your score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/4);
+      this.ctx.fillText('Your new high score is ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
+      this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
+      this.highScore = this.score;
+    } else if (this.score < this.highScore){
+      this.ctx.fillText('Your score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/4);
+      this.ctx.fillText('Your high score is ' + this.highScore, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
+      this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
+    } else if (this.score > this.highScore){
+      this.ctx.fillText('Your score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/4);
+      this.ctx.fillText('Your new high score is ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
+      this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
+      this.highScore = this.score;
+    }
   }
 
   // splashscreen(){
@@ -353,6 +368,7 @@ export default class Game {
     //// black out / fade out screen
     //// ask to play again? 
     this.started = false;
+    // this.lostGame = true;
     setTimeout(()=>{
       this.retryGameScreen();
     }, 1000)
