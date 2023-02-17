@@ -16,17 +16,17 @@
 //         this.y < obj.y + obj.height &&
 //         //// momo's feet is lower than object left corner
 //         this.y + this.height > obj.y){
-//           console.log("yvel", this.yVelocity);
+//        
         
 //         //// stop momo when she hits the platform from above  
 //         if (this.yVelocity >= 0){
 //           this.yVelocity = 0;
-//           console.log("top collided");
+//         
 //           this.grounded = true;
 //           this.jumped = false;
 //           this.y = obj.y - momoImage.height;
 //         } else if (this.yVelocity < 0 && this.yVelocity !== CONSTANTS.JUMP_SPEED) {
-//           console.log("bottom collide")
+//        
 //           this.yVelocity = 2;
 //           this.grounded = false;
 //           this.jumped = false;
@@ -49,7 +49,6 @@
 //     //   this.y < obj.y + obj.height  &&
 //     //   //// momo's butt is higher than object left corner
 //     //   this.y + this.height > obj.y + obj.height){
-//     //     console.log("bottom collided")
 //     //   if (this.yVelocity < 0){
 //     //       this.yVelocity = 2;
 //     //   }  

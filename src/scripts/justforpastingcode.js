@@ -64,7 +64,7 @@
 //       this.Ashy.draw(this.ctx);
 //       this.Ashy.automateMovement();
 //       if (this.momo.collide(this.Ashy, true)){
-//         console.log('collide')
+//        
 //         setTimeout(()=>{
 //           this.wonMiniGame = true;
 

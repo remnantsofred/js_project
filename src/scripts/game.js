@@ -101,10 +101,10 @@ export default class Game {
 
     //// constructor(id, title, subtitle, background, maxtime, objects, gravityModifier, target)
     this.levels = [ 
-      new Level(1, 'CLIMB', '', level1Background, 10, level1Objects, 1, fridge),
+      new Level(1, 'CLIMB', '', level1Background, 14, level1Objects, 1, fridge),
       new Level(2, 'AMBUSH', '', level2Background, 6, level2Objects, 1, this.Ashy),
       new Level(3, 'KILL', '', level4Background, 4, level3Objects, 1, this.fly),
-      new Level(4, 'CLIMB', '', level4Background, 10, level4Objects, 1, curtainrod),
+      new Level(4, 'CLIMB', '', level4Background, 18, level4Objects, 1, curtainrod),
       new Level(5, 'KILL', '', level1Background, 7, level1Objects, 1, this.fly),
       new Level(6, 'KILL', '', level4Background, 7, level6Objects, 1, this.fly),
       // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
@@ -241,9 +241,8 @@ export default class Game {
           this.wonMiniGame = true;
           this.winMiniGame();
         }
-        console.log("debugging")
         if (this.momo.y >= this.momo.momoBottom()){ 
-          console.log("lose game - why no lose?")
+          
           this.running = false;
           this.lostGame = true;                      
           this.loseGame();
@@ -373,10 +372,9 @@ export default class Game {
       this.retryGameScreen();
     }, 1000)
   }
-
-
+  
+  
   resetGame(){
-    this.prevlevel = this.level;      //// save current level as prev level
     this.winCounter = 0;              //// reset win counter
     if (this.wonMiniGame){
       this.score += 1;                //// increment score if won
@@ -386,7 +384,8 @@ export default class Game {
       this.lostGame = false;
       this.started = false;
     }
-    this.level = this.randomSelectLevel();         //// select a new level
+    this.level = this.randomSelectLevel();     /// select a new level
+    this.prevlevel = this.level;  
     this.timeremaining = this.level.maxtime;
     this.momo.reset();
     if (this.level.title === "AMBUSH"){
