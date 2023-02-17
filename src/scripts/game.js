@@ -241,9 +241,8 @@ export default class Game {
           this.wonMiniGame = true;
           this.winMiniGame();
         }
-        console.log("debugging")
         if (this.momo.y >= this.momo.momoBottom()){ 
-          console.log("lose game - why no lose?")
+          
           this.running = false;
           this.lostGame = true;                      
           this.loseGame();

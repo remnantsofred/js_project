@@ -378,7 +378,6 @@ export default class Momo {
 
   moveDown(){
     //// if momo is above ground
-    console.log('move down')
     if (((this.y + this.height) < (this.momoBottom())) && this.grounded){
       /// need to this this part once I make platforms
       this.yVelocity = CONSTANTS.GRAVITY;
@@ -420,12 +419,10 @@ export default class Momo {
           this.grounded = false;
           this.jumped = false;
           this.y = obj.y + obj.height + 1;
-          // console.log('grounded false')
         }
         return true;
       //// below else means no collision
       } else {
-        // console.log('grounded false')
         if (!ignoreIfs) {
           this.grounded = false; 
         }
