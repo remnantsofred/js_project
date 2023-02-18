@@ -229,7 +229,7 @@ export default class Momo {
           ctx.drawImage(ashyLeft, frameX * walkspriteWidth, 0, walkspriteWidth, walkspriteHeight, this.x, this.y, walkspriteWidth * sizeModifier, walkspriteHeight * sizeModifier);
           this.width = walkspriteWidth * sizeModifier;
           this.height = walkspriteHeight * sizeModifier;
-          if (gameFrame % staggerFrames == 0){
+          if (gameFrame % staggerFrames === 0){
             if (frameX < 3) frameX ++;
             else frameX = 1;
           }
@@ -264,7 +264,7 @@ export default class Momo {
         ctx.drawImage(flyImage, frameX * flyImagewidth, 0, flyImagewidth, flyImageHeight, this.x, this.y, flyImagewidth * flysizeModifier, flyImageHeight * flysizeModifier);
         this.width = flyImagewidth * flysizeModifier;
         this.height = flyImageHeight * flysizeModifier;
-        if (gameFrame % staggerFrames == 0){
+        if (gameFrame % staggerFrames === 0){
           if (frameX < 3) frameX ++;
           else frameX = 0;
         }

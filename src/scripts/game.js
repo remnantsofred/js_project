@@ -201,6 +201,7 @@ export default class Game {
     //     this.gameAction();
     } else if (e.key === "Enter" && !this.running && !this.started){
         this.play();
+       
     }
     //// ^ to do later: add action key for spacebar          
   }
@@ -212,7 +213,7 @@ export default class Game {
       this.ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_WIDTH);         /// clear the canvas
       this.level.drawBackground(this.ctx);     /// draw the level's background
       this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
-      this.wonMiniGame = false;
+      // this.wonMiniGame = false;
       for(const obj of this.level.objects){    //// iterate through this level's obejcts and check collision
         if (this.momo.collide(obj)){
           if (obj.target === true) {          //// if she collides with winning object, win game
@@ -259,7 +260,7 @@ export default class Game {
         }
       } 
 
-      if (this.level.title !== 'AMBUSH' || !this.wonMiniGame) {
+      if (this.level.title != 'AMBUSH' || !this.wonMiniGame) {
         this.momo.draw(this.ctx);
       }
 
@@ -287,6 +288,7 @@ export default class Game {
           this.ctx.font = '50px  Itim, cursive';
           this.ctx.fillStyle = "#daa520";
           this.ctx.fillText(' *** WIN GAME ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
+          window.cancelAnimationFrame(this.animate);
         } else if (this.lostGame){
           
           this.ctx.fillStyle = "#000000CC";
@@ -294,6 +296,7 @@ export default class Game {
           this.ctx.font = '50px  Itim, cursive';
           this.ctx.fillStyle = "#daa520";
           this.ctx.fillText(' *** GAME OVER ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
+          window.cancelAnimationFrame(this.animate);
         }
     } else if (!this.running && this.paused){
       
@@ -302,6 +305,7 @@ export default class Game {
       this.ctx.font = '50px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
       this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
+      
     }
   }
   
@@ -340,7 +344,7 @@ export default class Game {
       this.ctx.fillText('Your new high score is ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
       this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
       this.highScore = this.score;
-    } else if (this.score < this.highScore){
+    } else if (this.score <= this.highScore){
       this.ctx.fillText('Your score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/4);
       this.ctx.fillText('Your high score is ' + this.highScore, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
       this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
@@ -364,9 +368,11 @@ export default class Game {
   loseGame(){
     /// splash for you lose! sad momo sound
     this.level.drawLoseStatement(this.ctx);
+    
     //// black out / fade out screen
     //// ask to play again? 
     this.started = false;
+    
     // this.lostGame = true;
     setTimeout(()=>{
       this.retryGameScreen();
@@ -378,10 +384,12 @@ export default class Game {
     this.winCounter = 0;              //// reset win counter
     if (this.wonMiniGame){
       this.score += 1;                //// increment score if won
+      this.lostGame = false;
       this.wonMiniGame = false;
     } else if (this.lostGame){
-      this.score = 0;                 //// wipe score if lost
+      this.score = 0;            //// wipe score if lost
       this.lostGame = false;
+      this.wonMiniGame = false;
       this.started = false;
     }
     this.level = this.randomSelectLevel();     /// select a new level
@@ -412,6 +420,7 @@ export default class Game {
     }
 
     this.running = true;
+    window.cancelAnimationFrame(this.animate)
     this.animate();
   }
 
