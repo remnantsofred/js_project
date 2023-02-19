@@ -38,21 +38,15 @@ export default class Game {
     const fridge = new GameObject(this.ctx, 58, 158, 135, 5, "#7cfd21", true, false, true);
     const sinkLevel = new GameObject(this.ctx, 208, 364, 340, 5, "#fde321", true, false, false);
     const leftShelf = new GameObject(this.ctx, 450, 203, 120, 5, "#fde321", true, false, false);
-    // const rightShelf = new GameObject(this.ctx, 579, 173, 140, 5, "#7cfd21", true, false, false);
     //// level 4 objects
     const curtainrod = new GameObject(this.ctx, 265, 160, 165, 5, "#7cfd21", true, false, true);
-    // const couchCushion = new GameObject(this.ctx, 92, 431, 280, 5, "#7cfd21", true, false, false);
     const couchCushion = new GameObject(this.ctx, 290, 430, 90, 5, "#fde321", true, false, false);
     const couchTop = new GameObject(this.ctx, 80, 360, 160, 5, "#fde321", true, false, false);
-    // const tvConsole = new GameObject(this.ctx, 478, 416, 276, 5, "#7cfd21", true, false, false);
     const tv = new GameObject(this.ctx, 537, 311, 160, 5, "#fde321", true, false, false);
-    //// need to fix Ashy later
-    // const Ashy = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true);
     this.Ashy = new Momo(this.dimensions.width, this.dimensions.height, true, false);
     const fauxshelf = new GameObject(this.ctx, 235, 280, 200, 5, "#7cfd21", false, false, false);
     const hiddenledge = new GameObject(this.ctx, 250, 275, 200, 5, "#FFffff", true, false, false);
     this.fly = new Momo(this.dimensions.width, this.dimensions.height, false, true);
-    // const fly = new GameObject(this.ctx, 579, 173, 140, 1, "#7cfd21", true, false, true); 
     // GameObject constructor(ctx, x, y, width, height, color, collision, bounce, target) {
     // const <objName> = new GameObject(this.ctx, 248, 162, 206, 5, "#7cfd21", true, false, true);
 
@@ -62,23 +56,17 @@ export default class Game {
       firstObjectHidden,
       fridge,
       sinkLevel,
-      // leftShelf,
-      // rightShelf
     ];
     //// ambush ashy (kitchen)  
     const level2Objects = [
       ground,
       firstObjectHidden,
-      // fauxshelf,
       hiddenledge
-      // this.Ashy,
-      
     ];
     //// kill the fly (living room)  
     const level3Objects = [
       ground,
       firstObjectHidden
-      /// use this.fly (which is a momo. lol)
     ];
     //// forbidden furniture v2 (living room)
     const level4Objects = [
@@ -87,16 +75,13 @@ export default class Game {
       curtainrod,
       couchCushion,
       couchTop,
-      // tvConsole,
       tv
-      
     ];
 
     const level6Objects = [
       ground,
       firstObjectHidden,
       couchTop,
-    
     ];
 
     //// constructor(id, title, subtitle, background, maxtime, objects, gravityModifier, target)
@@ -107,30 +92,24 @@ export default class Game {
       new Level(4, 'CLIMB', '', level4Background, 18, level4Objects, 1, curtainrod),
       new Level(5, 'KILL', '', level1Background, 7, level1Objects, 1, this.fly),
       new Level(6, 'KILL', '', level4Background, 7, level6Objects, 1, this.fly),
-      // new Level(id, 'ESCAPE', '', level2Background, 10, level4Objects, 1.5, curtainrod),
     ];
     this.prevlevel = null;
-    // this.level = this.randomSelectLevel();     //// in the future, should start randomly? or always level0?
     this.level = this.levels[0];
     this.winCounter = 0;
     this.wonMiniGame = false;
     this.lostGame = false;
     this.score = 0;
     this.running = false;
-    this.started = false;
     this.highScore = 0;
-    // this.play(); //// replace play with a screen that says click to start! or instructions screen
+    this.firstTime = true;
     this.addEventListeners();
     this.startGameScreen();
-    // this.resetGame(); //// should we have play reset game? 
-
   }
 
 
   //// return a random level from this.levels (plural);
   //// iterate thru array so you don't get two of the same game in a row. shuffle array when you've gone through all levels
   randomSelectLevel(){
-    
     if (!this.prevlevel) {
       return this.levels[0];
     } else if (this.prevlevel === this.levels[0]){
@@ -147,14 +126,7 @@ export default class Game {
       this.shuffleLevelArray();
       return this.levels[0];
     }
- 
-    // //// testing level4
-    // if (this.prevlevel === this.levels[2]){
-    //   return this.levels[2];    
-    // } else {
-    //   return this.levels[2];   
-    // }
-    // return this.levels[1];
+  
   }
 
   shuffleLevelArray(){
@@ -162,17 +134,9 @@ export default class Game {
     this.levels = shuffled;
   }
   
-  play(){
-    this.started = true;
-    this.running = true;
-    // this.addEventListeners();
-    this.resetGame();
-  }
- 
   //// if adding event listeners to canvas, need to pass in bound callback
   addEventListeners(){
     window.addEventListener("keydown", this.keydownEvents.bind(this));
-    // this.setWonMiniGame.bind(this);
     this.resetGame.bind(this); //// won't let me bind here. Uncaught TypeError: Cannot read properties of undefined (reading 'bind')
     // a canvas example: this.canvas.addEventListener("mousedown", this.click.bind(this));
   }
@@ -199,28 +163,26 @@ export default class Game {
     //     this.pauseGame();
     // } else if (e.key === "ShiftLeft" || e.key === "ShiftRight"){
     //     this.gameAction();
-    } else if (e.key === "Enter" && !this.running && !this.started){
-        this.play();
-       
-    }
+    } else if (e.key === "Enter" && !this.running && (this.lostGame || this.firstTime)){
+        this.resetGame();
+    } 
     //// ^ to do later: add action key for spacebar          
   }
     
-
-
+  
+  
   animate(){
+    let id = requestAnimationFrame(this.animate.bind(this));
     if (this.running){
       this.ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_WIDTH);         /// clear the canvas
       this.level.drawBackground(this.ctx);     /// draw the level's background
       this.level.drawTitle(this.ctx);          /// draw the level's title (and subtitle, if applicable)
-      // this.wonMiniGame = false;
       for(const obj of this.level.objects){    //// iterate through this level's obejcts and check collision
         if (this.momo.collide(obj)){
           if (obj.target === true) {          //// if she collides with winning object, win game
             this.winCounter += 1;
             if (this.winCounter > 11){
-              this.running = false;
-              this.wonMiniGame = true;
+              window.cancelAnimationFrame(id);
               this.winMiniGame();
             }
           }       
@@ -238,24 +200,18 @@ export default class Game {
         if (this.momo.collide(this.Ashy, true)){      ///true meaning ignoreIfs in collide function
           this.Ashy.direction = "scared";
           this.Ashy.draw(this.ctx);
-          this.running = false;
-          this.wonMiniGame = true;
+          window.cancelAnimationFrame(id);
           this.winMiniGame();
         }
         if (this.momo.y >= this.momo.momoBottom()){ 
-          
-          this.running = false;
-          this.lostGame = true;                      
+          window.cancelAnimationFrame(id);                    
           this.loseGame();
         }
       } else if (this.level.title === "KILL"){
         this.fly.draw(this.ctx);
         this.fly.automateMovement();
         if (this.momo.collide(this.fly, true)){      ///true meaning ignoreIfs in collide function
-          // this.fly.direction = "scared";
-          // this.fly.draw(this.ctx);
-          this.running = false;
-          this.wonMiniGame = true;
+          window.cancelAnimationFrame(id);
           this.winMiniGame();
         }
       } 
@@ -266,18 +222,16 @@ export default class Game {
 
       this.ctx.font = '22px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
+      this.ctx.fillText('High Score:', 610, 50);
+      this.ctx.fillText(this.highScore.toString(), 735, 50);          //// draw high score
       this.ctx.fillText('Score:', 657, 75);
-      this.ctx.fillText(this.score.toString(), 735, 75);          //// draw score
-      this.ctx.fillText('Time left:', 626, 100);                //// draw timer countdown
-      this.ctx.fillText(this.timeremaining.toString(), 735, 100);          //// draw score
-      ///// draw time left here
-      let id = requestAnimationFrame(this.animate.bind(this));
-
+      this.ctx.fillText(this.score.toString(), 735, 75);            //// draw score
+      this.ctx.fillText('Time left:', 626, 100);                   //// draw timer countdown
+      this.ctx.fillText(this.timeremaining.toString(), 735, 100);  ///// draw time left here
 
       this.timeremaining -= 0.02;
-      if (this.timeremaining <= 0){                 //// this is something wrong with this. 
-        this.running = false;
-        this.lostGame = true;                       //// can't read this.level.maxtime;
+      if (this.timeremaining <= 0){                
+        window.cancelAnimationFrame(id);
         this.loseGame();
       }
 
@@ -288,24 +242,21 @@ export default class Game {
           this.ctx.font = '50px  Itim, cursive';
           this.ctx.fillStyle = "#daa520";
           this.ctx.fillText(' *** WIN GAME ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
-          window.cancelAnimationFrame(this.animate);
+          window.cancelAnimationFrame(id);
         } else if (this.lostGame){
-          
           this.ctx.fillStyle = "#000000CC";
           this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
           this.ctx.font = '50px  Itim, cursive';
           this.ctx.fillStyle = "#daa520";
           this.ctx.fillText(' *** GAME OVER ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
-          window.cancelAnimationFrame(this.animate);
+          window.cancelAnimationFrame(id);
         }
     } else if (!this.running && this.paused){
-      
       this.ctx.fillStyle = "#000000CC";
       this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       this.ctx.font = '50px  Itim, cursive';
       this.ctx.fillStyle = "#daa520";
-      this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2);
-      
+      this.ctx.fillText(' *** PAUSED ***', CANVAS_WIDTH/3.75, CANVAS_HEIGHT/2); 
     }
   }
   
@@ -363,17 +314,16 @@ export default class Game {
   //   this.ctx.drawImage(momoCanonball, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   // }
   
-  //// lose? when timer runs out. where do I decriment time? 
-  //// resetScore
+
   loseGame(){
     /// splash for you lose! sad momo sound
     this.level.drawLoseStatement(this.ctx);
     
     //// black out / fade out screen
     //// ask to play again? 
-    this.started = false;
-    
-    // this.lostGame = true;
+    this.firstTime = false;
+    this.lostGame = true;
+    this.running = false;
     setTimeout(()=>{
       this.retryGameScreen();
     }, 1000)
@@ -382,15 +332,12 @@ export default class Game {
   
   resetGame(){
     this.winCounter = 0;              //// reset win counter
-    if (this.wonMiniGame){
+    if (this.wonMiniGame === true){
       this.score += 1;                //// increment score if won
-      this.lostGame = false;
       this.wonMiniGame = false;
-    } else if (this.lostGame){
+    } else if (this.lostGame === true){
       this.score = 0;            //// wipe score if lost
       this.lostGame = false;
-      this.wonMiniGame = false;
-      this.started = false;
     }
     this.level = this.randomSelectLevel();     /// select a new level
     this.prevlevel = this.level;  
@@ -418,9 +365,7 @@ export default class Game {
       this.fly.collision = true;
       this.fly.xVelocity = CONSTANTS.WALK_SPEED;
     }
-
     this.running = true;
-    window.cancelAnimationFrame(this.animate)
     this.animate();
   }
 
@@ -431,15 +376,13 @@ export default class Game {
     //// play win sound
     //// splash for you won!
     this.level.drawWinStatement(this.ctx);
-    // this.resetGame();               //// restart game 
+    this.wonMiniGame = true;
+    this.running = false;
+    this.firstTime = false;
     setTimeout(()=>{
       this.resetGame();
     }, 2000)
-  }
-
- 
-  
-  
+  } 
 }
 
 
