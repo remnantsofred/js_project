@@ -41,16 +41,6 @@ In addition, this project will include:
 #### Main/Start Screen
 ![momo-start-screen](https://user-images.githubusercontent.com/114616864/220208917-c0bb5673-c1ed-483d-bbf2-14323dcc977d.png)
 
-
-#### Example Level Start
-<img width="898" alt="Ambush" src="https://user-images.githubusercontent.com/114616864/206602771-4d55ee3d-bd76-4465-ac39-5fda10e60bac.png">
-
-#### Example Win Ambush
-<img width="960" alt="Ambush win" src="https://user-images.githubusercontent.com/114616864/206602655-0f791819-5a1f-46bf-ac58-81529cd091af.png">
-
-#### Example Win Kill
-<img width="960" alt="win game" src="https://user-images.githubusercontent.com/114616864/206602715-8b6f9fb8-cb45-4b56-89e1-2b5ecc51b279.png">
-
 #### Retry Screen
 ![momo-retry-screen](https://user-images.githubusercontent.com/114616864/220208942-6c31d7f9-0923-4656-bd16-5c8a670d7484.png)
 
