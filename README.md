@@ -1,6 +1,6 @@
 # Momo's Misadventures
 
-Live version here: https://remnantsofred.github.io/momos_misadventures/
+[Momo's Misadventures live link](https://remnantsofred.github.io/momos_misadventures/)
 
 ## Background
 Momo's Misadventures is a JavaScript game about a cat doing cat things. A player will cycle through a series of quick, silly and simple mini-games. 
