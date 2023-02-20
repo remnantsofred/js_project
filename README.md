@@ -65,7 +65,7 @@ In addition, this project will include:
 
 ## Technologies, Libraries, APIs
 
-This project will be implemented with the following technologies:
+This project was implemented with the following technologies:
 
 - The `Canvas API` to render the game screen and the mini-games
 - `Webpack` to bundle and transpile the source JavaScript code
@@ -73,14 +73,11 @@ This project will be implemented with the following technologies:
 
 
 ## To-dos 
-- Fix the pause -> speeding up levels bug
-- Implement a high score & show it
-- About page
+- About modal
 
 
 ## Future features
 - CSS styling and buttons and text layered over the canvas instead of filltext inside the canvas
-- A mouseover/hover/drawer effect that shows the real Momo slide out
 - Music & sound effects (using my real cats)
 - More flavorful transitions with images, sounds, animations
 - Additional collision effects (KILL)
