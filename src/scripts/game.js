@@ -100,7 +100,11 @@ export default class Game {
     this.lostGame = false;
     this.score = 0;
     this.running = false;
-    this.highScore = 0;
+    if (localStorage.getItem("momo-misadventures-player-high-score") === null){
+      this.highScore = 0;
+    } else {
+      this.highScore = parseInt(localStorage.getItem("momo-misadventures-player-high-score"));
+    }
     this.firstTime = true;
     this.addEventListeners();
     this.startGameScreen();
@@ -295,6 +299,7 @@ export default class Game {
       this.ctx.fillText('Your new high score is ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
       this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
       this.highScore = this.score;
+      localStorage.setItem("momo-misadventures-player-high-score", this.score)
     } else if (this.score <= this.highScore){
       this.ctx.fillText('Your score was ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/4);
       this.ctx.fillText('Your high score is ' + this.highScore, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
@@ -304,6 +309,7 @@ export default class Game {
       this.ctx.fillText('Your new high score is ' + this.score, CANVAS_WIDTH/8, CANVAS_HEIGHT/3);
       this.ctx.fillText('Press Enter to Retry', CANVAS_WIDTH/8, CANVAS_HEIGHT/2);
       this.highScore = this.score;
+      localStorage.setItem("momo-misadventures-player-high-score", this.score)
     }
   }
 
